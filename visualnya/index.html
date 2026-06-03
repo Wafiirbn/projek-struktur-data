@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Performa Proyek Struktur Data IPB</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header class="hero">
+    <div>
+      <p class="eyebrow">Visualisasi Proyek Akhir Struktur Data</p>
+      <h1>Analisis Hasil Benchmark Sistem Log Monitoring</h1>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="dashboard-grid" style="display: flex; flex-direction: column; gap: 40px; padding: 20px max(2rem, 5vw);">
+      
+      <article class="chart-card" style="background: #ffffff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+        <div id="grafik_insert"></div>
+        <p class="chart-desc" style="font-size: 0.85rem; color: #64748b; margin-top: 10px; text-align: center;">
+          Grafik Perbandingan Operasi Penyisipan (<b>INSERT</b>) Entri Log Baru.
+        </p>
+      </article>
+
+      <article class="chart-card" style="background: #ffffff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+        <div id="grafik_search"></div>
+        <p class="chart-desc" style="font-size: 0.85rem; color: #64748b; margin-top: 10px; text-align: center;">
+          Grafik Perbandingan Operasi Pencarian Kunci (<b>SEARCH</b>) Berdasarkan Parameter Terkait.
+        </p>
+      </article>
+
+      <article class="chart-card" style="background: #ffffff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+        <div id="grafik_delete"></div>
+        <p class="chart-desc" style="font-size: 0.85rem; color: #64748b; margin-top: 10px; text-align: center;">
+          Grafik Perbandingan Operasi Penghapusan Data Usang (<b>DELETE</b>) Sebelum Batas Waktu Cutoff.
+        </p>
+      </article>
+
+      <article class="chart-card" style="background: #ffffff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+        <div id="grafik_semua_operasi"></div>
+        <p class="chart-desc" style="font-size: 0.85rem; color: #64748b; margin-top: 10px; text-align: center;">
+          Kurva Pertumbuhan Skalabilitas Kompleksitas Waktu Komparatif untuk Semua Jenis Operasi.
+        </p>
+      </article>
+
+    </div>
+  </main>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
