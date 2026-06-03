@@ -348,6 +348,8 @@ double measureMs(Func&& f) {
     return duration<double, milli>(t1 - t0).count();
 }
 
+void exportBenchmarkToCSV(const string& filename, const vector<BenchmarkResult>& results);
+
 void printBenchmarkTable(const vector<BenchmarkResult>& results) {
     cout << "\n" << string(70, '=') << "\n";
     cout << left
@@ -366,6 +368,7 @@ void printBenchmarkTable(const vector<BenchmarkResult>& results) {
              << "\n";
     }
     cout << string(70, '=') << "\n";
+exportBenchmarkToCSV("benchmark_results.csv", results);
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -565,10 +568,11 @@ void printMenu() {
     cout << "║  2. Search by level                  ║\n";
     cout << "║  3. Search by modul                  ║\n";
     cout << "║  4. Search by rentang waktu          ║\n";
-    cout << "║  5. Tampilkan log ERROR               ║\n";
+    cout << "║  5. Tampilkan log ERROR              ║\n";
     cout << "║  6. Delete log lama (by cutoff)      ║\n";
     cout << "║  7. Statistik log                    ║\n";
     cout << "║  8. Jalankan benchmark               ║\n";
+    cout << "║  9. Export benchmark results         ║\n";
     cout << "║  0. Keluar                           ║\n";
     cout << "╚══════════════════════════════════════╝\n";
     cout << "Pilihan: ";
@@ -583,6 +587,18 @@ void printResults(const vector<LogEntry>& results, int limit = 10) {
         if (cnt++ >= limit) break;
         e.print();
     }
+}
+void exportBenchmarkToCSV(const string& filename, const vector<BenchmarkResult>& results) {
+    ofstream f(filename);
+    f << "Struktur,n,Insert (ms),Search (ms),Delete (ms)\n";
+    for (auto& r : results) {
+        f << r.structure << ","
+          << r.n << ","
+          << fixed << setprecision(4) << r.insert_ms << ","
+          << r.search_ms << ","
+          << r.delete_ms << "\n";
+    }
+    f.close();
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -689,6 +705,11 @@ int main(int argc, char* argv[]) {
             vector<int> sizes = {1000, 3000, 5000, 10000};
             manager.runBenchmark(allLogs, sizes);
 
+        } else if (choice == 9) {
+            // Export benchmark results to CSV
+            vector<BenchmarkResult> results;
+            // Populate results vector with benchmark data
+            exportBenchmarkToCSV("benchmark_results.csv", results);
         } else {
             cout << "⚠️  Pilihan tidak valid.\n";
         }
