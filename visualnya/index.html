@@ -3,50 +3,201 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard Performa Proyek Struktur Data IPB</title>
+  <title>Dashboard Analisis Performa Struktur Data — Log Monitoring</title>
+  <meta name="description" content="Visualisasi perbandingan performa Linked List, AVL Tree, dan Hash Table pada sistem monitoring log aktivitas aplikasi." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
+
+  <!-- HEADER HERO -->
   <header class="hero">
-    <div>
-      <p class="eyebrow">Visualisasi Proyek Akhir Struktur Data</p>
-      <h1>Analisis Hasil Benchmark Sistem Log Monitoring</h1>
+    <div class="hero-content">
+      <span class="badge">Topik 9 — Struktur Data</span>
+      <h1>Analisis Performa Sistem Monitoring Log</h1>
+      <p class="hero-subtitle">
+        Perbandingan <strong>Linked List</strong>, <strong>AVL Tree</strong>, dan <strong>Hash Table</strong>
+        dalam operasi insert, search, dan delete log aktivitas aplikasi.
+      </p>
+      <div class="hero-meta">
+        <span class="meta-chip">📊 Dataset: 100.000 Log Entries</span>
+        <span class="meta-chip">🔁 5× Repeat Measurement</span>
+        <span class="meta-chip">🌐 C++14 · Plotly.js</span>
+      </div>
     </div>
   </header>
 
-  <main class="container">
-    <div class="dashboard-grid" style="display: flex; flex-direction: column; gap: 40px; padding: 20px max(2rem, 5vw);">
-      
-      <article class="chart-card" style="background: #ffffff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
-        <div id="grafik_insert"></div>
-        <p class="chart-desc" style="font-size: 0.85rem; color: #64748b; margin-top: 10px; text-align: center;">
-          Grafik Perbandingan Operasi Penyisipan (<b>INSERT</b>) Entri Log Baru.
-        </p>
+  <!-- BIG-O REFERENCE TABLE -->
+  <section class="complexity-section container">
+    <h2 class="section-title">Kompleksitas Algoritma</h2>
+    <div class="complexity-grid">
+      <div class="complexity-card">
+        <div class="ds-name ll">Linked List</div>
+        <table class="big-o-table">
+          <thead><tr><th>Operasi</th><th>Kompleksitas</th></tr></thead>
+          <tbody>
+            <tr><td>Insert</td><td class="good">O(1)</td></tr>
+            <tr><td>Search (level/modul)</td><td class="bad">O(n)</td></tr>
+            <tr><td>Range Search</td><td class="bad">O(n)</td></tr>
+            <tr><td>Delete (cutoff)</td><td class="bad">O(n)</td></tr>
+            <tr><td>Memori per node</td><td class="mid">~208 B</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="complexity-card">
+        <div class="ds-name avl">AVL Tree</div>
+        <table class="big-o-table">
+          <thead><tr><th>Operasi</th><th>Kompleksitas</th></tr></thead>
+          <tbody>
+            <tr><td>Insert</td><td class="good">O(log n)</td></tr>
+            <tr><td>Search (level)</td><td class="bad">O(n)</td></tr>
+            <tr><td>Range Search</td><td class="good">O(log n + k)</td></tr>
+            <tr><td>Delete (cutoff)</td><td class="mid">O(n log n)</td></tr>
+            <tr><td>Memori per node</td><td class="mid">~240 B</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="complexity-card">
+        <div class="ds-name ht">Hash Table</div>
+        <table class="big-o-table">
+          <thead><tr><th>Operasi</th><th>Kompleksitas</th></tr></thead>
+          <tbody>
+            <tr><td>Insert</td><td class="good">O(1) avg</td></tr>
+            <tr><td>Search (level/modul)</td><td class="good">O(1) avg</td></tr>
+            <tr><td>Range Search</td><td class="bad">O(n)</td></tr>
+            <tr><td>Delete (cutoff)</td><td class="bad">O(n)</td></tr>
+            <tr><td>Memori per node</td><td class="mid">~264 B</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- GRAFIK -->
+  <main class="container" id="charts-section">
+    <h2 class="section-title">Hasil Benchmark</h2>
+
+    <div class="charts-grid">
+
+      <!-- INSERT -->
+      <article class="chart-card" id="card-insert">
+        <div class="chart-header">
+          <h3 class="chart-title">⚡ Operasi INSERT</h3>
+          <p class="chart-desc">Waktu rata-rata memasukkan entri log baru ke masing-masing struktur data (5× repeat).</p>
+        </div>
+        <div id="grafik_insert" class="chart-container"></div>
+        <div class="chart-insight">
+          💡 <strong>Hash Table & Linked List</strong> unggul dalam insert karena tidak perlu menjaga urutan.
+          <strong>AVL Tree</strong> butuh rotasi setiap insert, namun tetap O(log n) worst-case.
+        </div>
       </article>
 
-      <article class="chart-card" style="background: #ffffff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
-        <div id="grafik_search"></div>
-        <p class="chart-desc" style="font-size: 0.85rem; color: #64748b; margin-top: 10px; text-align: center;">
-          Grafik Perbandingan Operasi Pencarian Kunci (<b>SEARCH</b>) Berdasarkan Parameter Terkait.
-        </p>
+      <!-- EXACT SEARCH -->
+      <article class="chart-card" id="card-search">
+        <div class="chart-header">
+          <h3 class="chart-title">🔍 Operasi SEARCH (by Level/Key)</h3>
+          <p class="chart-desc">Waktu pencarian log berdasarkan level (INFO/WARNING/ERROR/DEBUG/CRITICAL) — exact match.</p>
+        </div>
+        <div id="grafik_search" class="chart-container"></div>
+        <div class="chart-insight">
+          💡 <strong>Hash Table</strong> dominan dengan O(1) — waktu hampir konstan berapa pun n.
+          Linked List dan AVL Tree keduanya O(n) untuk pencarian berdasarkan level.
+        </div>
       </article>
 
-      <article class="chart-card" style="background: #ffffff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
-        <div id="grafik_delete"></div>
-        <p class="chart-desc" style="font-size: 0.85rem; color: #64748b; margin-top: 10px; text-align: center;">
-          Grafik Perbandingan Operasi Penghapusan Data Usang (<b>DELETE</b>) Sebelum Batas Waktu Cutoff.
-        </p>
+      <!-- RANGE SEARCH -->
+      <article class="chart-card" id="card-range">
+        <div class="chart-header">
+          <h3 class="chart-title">📅 Operasi RANGE SEARCH (by Waktu)</h3>
+          <p class="chart-desc">Waktu pencarian log dalam rentang waktu tertentu (window 30 hari).</p>
+        </div>
+        <div id="grafik_range" class="chart-container"></div>
+        <div class="chart-insight">
+          💡 <strong>AVL Tree</strong> sangat efisien untuk range search berdasarkan timestamp karena terurut secara inheren — O(log n + k).
+          Hash Table & Linked List harus scan seluruh data — O(n).
+        </div>
       </article>
 
-      <article class="chart-card" style="background: #ffffff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
-        <div id="grafik_semua_operasi"></div>
-        <p class="chart-desc" style="font-size: 0.85rem; color: #64748b; margin-top: 10px; text-align: center;">
-          Kurva Pertumbuhan Skalabilitas Kompleksitas Waktu Komparatif untuk Semua Jenis Operasi.
-        </p>
+      <!-- DELETE -->
+      <article class="chart-card" id="card-delete">
+        <div class="chart-header">
+          <h3 class="chart-title">🗑️ Operasi DELETE (log lama)</h3>
+          <p class="chart-desc">Waktu menghapus log yang lebih lama dari timestamp cutoff (±50% data dihapus).</p>
+        </div>
+        <div id="grafik_delete" class="chart-container"></div>
+        <div class="chart-insight">
+          💡 Semua struktur perlu O(n) untuk delete berdasarkan waktu, namun <strong>AVL Tree</strong>
+          memerlukan rekonstruksi ulang agar tetap seimbang setelah penghapusan massal.
+        </div>
+      </article>
+
+      <!-- MEMORY -->
+      <article class="chart-card" id="card-memory">
+        <div class="chart-header">
+          <h3 class="chart-title">💾 Penggunaan Memori (Estimasi)</h3>
+          <p class="chart-desc">Estimasi total memori yang digunakan setelah insert n entri (dalam Kilobytes).</p>
+        </div>
+        <div id="grafik_memory" class="chart-container"></div>
+        <div class="chart-insight">
+          💡 <strong>Linked List</strong> paling hemat memori (node minimal).
+          <strong>AVL Tree</strong> menggunakan memori lebih banyak karena menyimpan pointer kiri/kanan dan nilai height.
+          <strong>Hash Table</strong> menggunakan overhead bucket tambahan.
+        </div>
+      </article>
+
+      <!-- SKALABILITAS -->
+      <article class="chart-card wide" id="card-scalability">
+        <div class="chart-header">
+          <h3 class="chart-title">📈 Kurva Skalabilitas Semua Operasi</h3>
+          <p class="chart-desc">Pertumbuhan waktu eksekusi terhadap peningkatan volume data — menunjukkan dampak pertumbuhan log terhadap performa.</p>
+        </div>
+        <div id="grafik_semua_operasi" class="chart-container chart-tall"></div>
+        <div class="chart-insight">
+          💡 Grafik ini menunjukkan bagaimana performa masing-masing struktur data <em>berskalanya</em> seiring bertambahnya volume log.
+          Garis yang mendekati datar = performa lebih konsisten pada data besar.
+        </div>
       </article>
 
     </div>
   </main>
+
+  <!-- REKOMENDASI -->
+  <section class="recommendation container">
+    <h2 class="section-title">Rekomendasi Struktur Data</h2>
+    <div class="rec-grid">
+      <div class="rec-card winner">
+        <div class="rec-icon">🏆</div>
+        <h3>Terbaik untuk Search Cepat</h3>
+        <div class="rec-ds ht">Hash Table</div>
+        <p>O(1) lookup berdasarkan level/modul — ideal untuk sistem monitoring real-time yang butuh filter log instan.</p>
+      </div>
+      <div class="rec-card">
+        <div class="rec-icon">📅</div>
+        <h3>Terbaik untuk Range Query</h3>
+        <div class="rec-ds avl">AVL Tree</div>
+        <p>O(log n + k) range search berdasarkan timestamp — ideal untuk analisis log dalam rentang waktu tertentu.</p>
+      </div>
+      <div class="rec-card">
+        <div class="rec-icon">⚡</div>
+        <h3>Terbaik untuk Insert Cepat & Memori Hemat</h3>
+        <div class="rec-ds ll">Linked List</div>
+        <p>O(1) append — ideal untuk sistem append-only log dengan volume tinggi tanpa kebutuhan query kompleks.</p>
+      </div>
+      <div class="rec-card highlight">
+        <div class="rec-icon">🎯</div>
+        <h3>Rekomendasi Sistem Produksi</h3>
+        <div class="rec-ds combo">Hash Table + AVL Tree</div>
+        <p>Gunakan Hash Table untuk query cepat berdasarkan kategori dan AVL Tree untuk range query waktu. Pendekatan hybrid ini mengoptimalkan semua jenis operasi log.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <p>Topik 9 — Sistem Monitoring & Log Aktivitas Aplikasi · Analisis Struktur Data</p>
+    <p style="font-size:0.8rem; opacity:0.6; margin-top:4px;">Linked List · AVL Tree · Hash Table · Dataset 100k · 5× Repeat</p>
+  </footer>
 
   <script type="module" src="/src/main.js"></script>
 </body>
