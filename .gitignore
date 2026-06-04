@@ -1,1 +1,19 @@
-node_modules/*
+# Dependencies
+node_modules/
+visualnya/node_modules/
+
+# Vite cache
+visualnya/.vite/
+visualnya/dist/
+
+# C++ compiled binaries
+*.exe
+*.out
+a.out
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/settings.json
