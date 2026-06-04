@@ -1,7 +1,7 @@
 CXX = g++
 CXXFLAGS = -std=c++17 -Iinclude -Wall -Wextra
 
-SRC = src/main.cpp src/LogEntry.cpp src/LogLinkedList.cpp src/LogBST.cpp src/LogHashTable.cpp src/LogManager.cpp
+SRC = src/main.cpp src/LogEntry.cpp src/LogLinkedList.cpp src/LogAVL.cpp src/LogHashTable.cpp src/LogManager.cpp
 OBJ = $(SRC:.cpp=.o)
 TARGET = log_monitoring
 

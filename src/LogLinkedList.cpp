@@ -99,8 +99,11 @@ std::unordered_map<std::string, int> LogLinkedList::statistics() const {
     return stats;
 }
 
-int LogLinkedList::size() const {
-    return size_;
+int LogLinkedList::size() const { return size_; }
+
+size_t LogLinkedList::estimateMemoryBytes() const {
+    // 8 bytes for next pointer + size of LogEntry
+    return (size_t)size_ * (sizeof(LLNode) + 100); // 100 for string lengths roughly
 }
 
 void LogLinkedList::printAll(int limit) const {

@@ -45,15 +45,19 @@ std::vector<LogEntry> loadCSV(const std::string& path, int limit) {
 //  BENCHMARK HELPER FUNCTIONS
 // ═══════════════════════════════════════════════════════════════
 template<typename Func>
-static double measureMs(Func&& f) {
-    auto t0 = high_resolution_clock::now();
-    f();
-    auto t1 = high_resolution_clock::now();
-    return duration<double, std::milli>(t1 - t0).count();
+static double measureMsAvg(Func&& f, int repeat = 5) {
+    double total_ms = 0;
+    for (int i = 0; i < repeat; ++i) {
+        auto t0 = high_resolution_clock::now();
+        f();
+        auto t1 = high_resolution_clock::now();
+        total_ms += duration<double, std::milli>(t1 - t0).count();
+    }
+    return total_ms / repeat;
 }
 
 static void printBenchmarkTable(const std::vector<BenchmarkResult>& results) {
-    std::cout << "\n" << std::string(90, '=') << "\n";
+    std::cout << "\n" << std::string(105, '=') << "\n";
     std::cout << std::left
               << std::setw(15) << "Struktur"
               << std::setw(8)  << "n"
@@ -61,17 +65,20 @@ static void printBenchmarkTable(const std::vector<BenchmarkResult>& results) {
               << std::setw(18) << "Exact Srch (ms)"
               << std::setw(18) << "Range Srch (ms)"
               << std::setw(15) << "Delete (ms)"
-              << "\n" << std::string(90, '-') << "\n";
+              << std::setw(15) << "Memory (KB)"
+              << "\n" << std::string(105, '-') << "\n";
     for (auto& r : results) {
-        std::cout << std::setw(15) << r.structure
+        std::cout << std::left
+                  << std::setw(15) << r.structure
                   << std::setw(8)  << r.n
                   << std::setw(16) << std::fixed << std::setprecision(4) << r.insert_ms
                   << std::setw(18) << r.exact_search_ms
                   << std::setw(18) << r.range_search_ms
                   << std::setw(15) << r.delete_ms
+                  << std::setw(15) << std::setprecision(1) << r.mem_kb
                   << "\n";
     }
-    std::cout << std::string(90, '=') << "\n";
+    std::cout << std::string(105, '=') << "\n";
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -89,7 +96,7 @@ void LogManager::loadFromCSV(const std::string& path, int limit) {
 
 void LogManager::insertLog(const LogEntry& e) {
     ll.insert(e);
-    bst.insert(e);
+    avl.insert(e);
     ht_level.insert(e);
     ht_module.insert(e);
     total++;
@@ -104,7 +111,7 @@ std::vector<LogEntry> LogManager::searchByModule(const std::string& mod) {
 }
 
 std::vector<LogEntry> LogManager::searchByTimeRange(const std::string& t_start, const std::string& t_end) {
-    return bst.searchByTimeRange(t_start, t_end);
+    return avl.searchByTimeRange(t_start, t_end);
 }
 
 std::vector<LogEntry> LogManager::getErrors() {
@@ -113,7 +120,7 @@ std::vector<LogEntry> LogManager::getErrors() {
 
 void LogManager::deleteBefore(const std::string& cutoff) {
     int deleted = ll.deleteBefore(cutoff);
-    bst.deleteBefore(cutoff);
+    avl.deleteBefore(cutoff);
     ht_level.deleteBefore(cutoff);
     ht_module.deleteBefore(cutoff);
     total -= deleted;
@@ -137,23 +144,26 @@ std::vector<BenchmarkResult> LogManager::getLastBenchmark() {
     return last_benchmark_results;
 }
 
-void LogManager::runBenchmark(const std::vector<LogEntry>& allLogs, const std::vector<int>& sizes) {
+void LogManager::runBenchmark(const std::vector<LogEntry>& allLogs, const std::vector<int>& sizes, int repeat) {
     if (allLogs.empty()) {
         std::cout << "⚠️ Tidak ada data untuk melakukan pengujian benchmark.\n";
         return;
     }
-    std::cout << "\n" << std::string(70, '=') << "\n";
-    std::cout << "  MULAI PENGUJIAN BENCHMARK APPLE-TO-APPLE\n";
-    std::cout << std::string(70, '=') << "\n";
+    std::cout << "\n" << std::string(75, '=') << "\n";
+    std::cout << "  MULAI PENGUJIAN BENCHMARK APPLE-TO-APPLE (REPEAT " << repeat << "x)\n";
+    std::cout << std::string(75, '=') << "\n";
 
     last_benchmark_results.clear();
     std::string search_level = "ERROR";
 
     for (int n : sizes) {
-        if (n > (int)allLogs.size()) continue;
+        if (n > (int)allLogs.size()) {
+            std::cout << "⚠️ Lewati n=" << n << " (data tidak cukup, hanya " << allLogs.size() << " entri)\n";
+            continue;
+        }
         std::vector<LogEntry> sample(allLogs.begin(), allLogs.begin() + n);
 
-        // Shuffling khusus agar BST optimal (mencegah degradasi worst-case)
+        // Shuffling khusus agar AVL optimal (mencegah degradasi worst-case)
         std::vector<LogEntry> shuffled = sample;
         std::mt19937 rng(42);
         std::shuffle(shuffled.begin(), shuffled.end(), rng);
@@ -170,48 +180,84 @@ void LogManager::runBenchmark(const std::vector<LogEntry>& allLogs, const std::v
         std::strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", tminfo);
         std::string t_end = std::string(buf);
 
-        std::cout << "▶ Menjalankan pengujian untuk n = " << n << " entri...\n";
+        std::cout << "\n▶ n = " << n << " entri (repeat=" << repeat << "x)...\n";
 
         // ── Skenario 1: Linked List ──
         {
-            LogLinkedList ll_b;
-            double t_ins = measureMs([&]{ for (auto& e : sample) ll_b.insert(e); });
-            double t_ex  = measureMs([&]{ ll_b.searchByLevel(search_level); });
-            double t_rng = measureMs([&]{ ll_b.searchByTimeRange(t_start, t_end); });
+            LogLinkedList ll_mem;
+            for (auto& e : sample) ll_mem.insert(e);
             
-            LogLinkedList ll_del;
-            for (auto& e : sample) ll_del.insert(e);
-            double t_del = measureMs([&]{ ll_del.deleteBefore(cutoff); });
+            double t_ins = measureMsAvg([&]{ 
+                LogLinkedList ll_b;
+                for (auto& e : sample) ll_b.insert(e); 
+            }, repeat);
             
-            last_benchmark_results.push_back({"LinkedList", n, t_ins, t_ex, t_rng, t_del});
+            double t_ex  = measureMsAvg([&]{ ll_mem.searchByLevel(search_level); }, repeat);
+            double t_rng = measureMsAvg([&]{ ll_mem.searchByTimeRange(t_start, t_end); }, repeat);
+            
+            double t_del = measureMsAvg([&]{ 
+                LogLinkedList ll_del;
+                for (auto& e : sample) ll_del.insert(e);
+                ll_del.deleteBefore(cutoff); 
+            }, repeat);
+            
+            double mem_kb = ll_mem.estimateMemoryBytes() / 1024.0;
+            last_benchmark_results.push_back({"LinkedList", n, t_ins, t_ex, t_rng, t_del, mem_kb});
+            std::cout << "  ✓ LinkedList: ins=" << std::fixed << std::setprecision(3) << t_ins
+                      << "ms, search=" << t_ex << "ms, range=" << t_rng
+                      << "ms, del=" << t_del << "ms, mem=" << std::setprecision(1) << mem_kb << " KB\n";
         }
 
-        // ── Skenario 2: BST ──
+        // ── Skenario 2: AVL Tree ──
         {
-            LogBST bst_b;
-            double t_ins = measureMs([&]{ for (auto& e : shuffled) bst_b.insert(e); });
-            double t_ex  = measureMs([&]{ bst_b.searchByLevel(search_level); });
-            double t_rng = measureMs([&]{ bst_b.searchByTimeRange(t_start, t_end); });
+            LogAVL avl_mem;
+            for (auto& e : shuffled) avl_mem.insert(e);
             
-            LogBST bst_del;
-            for (auto& e : shuffled) bst_del.insert(e);
-            double t_del = measureMs([&]{ bst_del.deleteBefore(cutoff); });
+            double t_ins = measureMsAvg([&]{ 
+                LogAVL avl_b;
+                for (auto& e : shuffled) avl_b.insert(e); 
+            }, repeat);
             
-            last_benchmark_results.push_back({"BST", n, t_ins, t_ex, t_rng, t_del});
+            double t_ex  = measureMsAvg([&]{ avl_mem.searchByLevel(search_level); }, repeat);
+            double t_rng = measureMsAvg([&]{ avl_mem.searchByTimeRange(t_start, t_end); }, repeat);
+            
+            double t_del = measureMsAvg([&]{ 
+                LogAVL avl_del;
+                for (auto& e : shuffled) avl_del.insert(e);
+                avl_del.deleteBefore(cutoff); 
+            }, repeat);
+            
+            double mem_kb = avl_mem.estimateMemoryBytes() / 1024.0;
+            last_benchmark_results.push_back({"AVL Tree", n, t_ins, t_ex, t_rng, t_del, mem_kb});
+            std::cout << "  ✓ AVL Tree:   ins=" << std::fixed << std::setprecision(3) << t_ins
+                      << "ms, search=" << t_ex << "ms, range=" << t_rng
+                      << "ms, del=" << t_del << "ms, mem=" << std::setprecision(1) << mem_kb << " KB\n";
         }
 
         // ── Skenario 3: Hash Table ──
         {
-            LogHashTable ht_b("level");
-            double t_ins = measureMs([&]{ for (auto& e : sample) ht_b.insert(e); });
-            double t_ex  = measureMs([&]{ ht_b.search(search_level); });
-            double t_rng = measureMs([&]{ ht_b.searchByTimeRange(t_start, t_end); });
+            LogHashTable ht_mem("level");
+            for (auto& e : sample) ht_mem.insert(e);
             
-            LogHashTable ht_del("level");
-            for (auto& e : sample) ht_del.insert(e);
-            double t_del = measureMs([&]{ ht_del.deleteBefore(cutoff); });
+            double t_ins = measureMsAvg([&]{ 
+                LogHashTable ht_b("level");
+                for (auto& e : sample) ht_b.insert(e); 
+            }, repeat);
             
-            last_benchmark_results.push_back({"HashTable", n, t_ins, t_ex, t_rng, t_del});
+            double t_ex  = measureMsAvg([&]{ ht_mem.search(search_level); }, repeat);
+            double t_rng = measureMsAvg([&]{ ht_mem.searchByTimeRange(t_start, t_end); }, repeat);
+            
+            double t_del = measureMsAvg([&]{ 
+                LogHashTable ht_del("level");
+                for (auto& e : sample) ht_del.insert(e);
+                ht_del.deleteBefore(cutoff); 
+            }, repeat);
+            
+            double mem_kb = ht_mem.estimateMemoryBytes() / 1024.0;
+            last_benchmark_results.push_back({"HashTable", n, t_ins, t_ex, t_rng, t_del, mem_kb});
+            std::cout << "  ✓ HashTable:  ins=" << std::fixed << std::setprecision(3) << t_ins
+                      << "ms, search=" << t_ex << "ms, range=" << t_rng
+                      << "ms, del=" << t_del << "ms, mem=" << std::setprecision(1) << mem_kb << " KB\n";
         }
     }
     printBenchmarkTable(last_benchmark_results);

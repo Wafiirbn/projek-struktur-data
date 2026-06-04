@@ -27,7 +27,7 @@ kondisi yang terkontrol dan dapat direproduksi (Sedgewick & Wayne, 2011).
 
 Timestamp setiap record dibangkitkan secara acak dalam rentang satu tahun penuh
 menggunakan modul random dari Python, yang menghasilkan distribusi waktu yang hampir
-seragam (uniform) sepanjang periode tersebut. Hal ini memastikan bahwa BST tidak
+seragam (uniform) sepanjang periode tersebut. Hal ini memastikan bahwa AVL Tree tidak
 mengalami degenerasi akibat input terurut secara monoton saat data dimuat ke dalam
 struktur.
 
@@ -61,14 +61,12 @@ diterapkan kebijakan variasi input berikut:
     a.  Linked List — menerima data dalam urutan asli (sekuensial sesuai urutan
         pembacaan CSV), karena Linked List tidak memiliki properti pengurutan.
 
-    b.  Binary Search Tree — menerima data yang telah diacak (shuffled) menggunakan
+    b.  AVL Tree (Self-Balancing BST) — menerima data yang telah diacak (shuffled) menggunakan
         algoritma Fisher-Yates melalui std::shuffle dengan seed deterministik
-        mt19937(42) sebelum disisipkan. Pengacakan ini dilakukan untuk mencegah
-        kondisi terburuk (worst-case) BST yang terjadi ketika data dimasukkan dalam
-        urutan terurut monoton, yang akan menyebabkan pohon terdegenerasi menjadi
-        struktur linear dengan tinggi O(n) (Cormen et al., 2009). Penggunaan seed
-        tetap memastikan urutan pengacakan identik di setiap eksekusi sehingga hasil
-        pengujian dapat direproduksi.
+        mt19937(42) sebelum disisipkan. Pengacakan ini dilakukan untuk menjaga
+        konsistensi hasil benchmark antar iterasi dan menguji kondisi terbaik dari
+        operasi balancing AVL. Penggunaan seed tetap memastikan urutan pengacakan
+        identik di setiap eksekusi sehingga hasil pengujian dapat direproduksi.
 
     c.  Hash Table — menerima data dalam urutan asli (sekuensial), karena Hash Table
         tidak sensitif terhadap urutan penyisipan.
@@ -151,9 +149,9 @@ jumlah elemen yang disimpan:
     -   Linked List: setiap node menyimpan satu objek LogEntry dan satu pointer
         (8 byte pada sistem 64-bit), sehingga overhead per elemen relatif minimal.
 
-    -   BST: setiap node menyimpan satu objek LogEntry, satu nilai key (long long,
-        8 byte), dan dua pointer kiri-kanan (masing-masing 8 byte), menghasilkan
-        overhead per elemen sedikit lebih besar dibanding Linked List.
+    -   AVL Tree: setiap node menyimpan satu objek LogEntry, satu nilai key (long long,
+        8 byte), dua pointer kiri-kanan (masing-masing 8 byte), dan tinggi node (integer 
+        4 byte), menghasilkan overhead per elemen lebih besar dibanding Linked List.
 
     -   Hash Table: menggunakan unordered_map yang secara internal mengalokasikan
         bucket array dengan faktor beban (load factor) rata-rata 1,0 secara default
@@ -177,7 +175,7 @@ direproduksi. Reproducibility merupakan salah satu kriteria validitas penelitian
 empiris dalam ilmu komputer (ACM, 2020). Mekanisme yang diterapkan untuk menjamin
 reproducibility adalah sebagai berikut:
 
-    a.  Seed deterministik pada pengacakan. Pengacakan urutan data untuk BST
+    a.  Seed deterministik pada pengacakan. Pengacakan urutan data untuk AVL
         menggunakan generator bilangan acak semu (pseudo-random number generator)
         Mersenne Twister std::mt19937 dengan nilai seed tetap 42. Dengan seed
         yang sama, urutan pengacakan yang dihasilkan akan selalu identik di setiap

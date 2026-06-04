@@ -5,8 +5,8 @@ IMPLEMENTASI
 4.1  Detail Implementasi Tiap Struktur Data
 
 Sistem Log Monitoring yang dibangun dalam proyek ini mengimplementasikan tiga
-struktur data utama secara paralel dan sinkron, yaitu Singly Linked List, Binary
-Search Tree (BST), dan Hash Table. Setiap entri log yang diterima sistem langsung
+struktur data utama secara paralel dan sinkron, yaitu Singly Linked List, AVL Tree
+(Self-Balancing BST), dan Hash Table. Setiap entri log yang diterima sistem langsung
 didistribusikan ke ketiga struktur data tersebut sekaligus melalui kelas LogManager,
 sehingga masing-masing struktur dapat dimanfaatkan sesuai keunggulan karakteristik
 operasinya masing-masing.
@@ -54,14 +54,14 @@ kemunculan setiap kategori level log. Hasilnya disimpan dalam unordered_map deng
 kunci berupa nama level dan nilai berupa jumlah kemunculannya.
 
 
-4.1.2  Binary Search Tree (LogBST)
+4.1.2  AVL Tree (LogAVL)
 
-BST diimplementasikan menggunakan pasangan struct BSTNode dan kelas LogBST. Kunci
+AVL Tree diimplementasikan menggunakan pasangan struct AVLNode dan kelas LogAVL. Kunci
 pengurutan yang digunakan adalah nilai Unix epoch (bilangan bulat 64-bit) yang
 dikonversi dari field timestamp setiap log. Konversi ini hanya dilakukan sekali dan
 disimpan dalam cache field _epoch pada struct LogEntry.
 
-a.  Operasi Insert Iteratif (O(log n) rata-rata)
+a.  Operasi Insert Iteratif (O(log n) worst-case)
 
 Implementasi insert menggunakan pendekatan iteratif, bukan rekursif, guna mencegah
 kemungkinan stack overflow saat memproses dataset berukuran besar. Node baru
@@ -69,14 +69,14 @@ disisipkan dengan membandingkan nilai epoch-nya terhadap setiap node yang ditemu
 bergerak ke cabang kiri jika lebih kecil atau sama, dan ke cabang kanan jika lebih
 besar.
 
-Dalam pengujian benchmark, data yang dimasukkan ke BST terlebih dahulu diacak
-menggunakan std::shuffle dengan seed tetap (mt19937(42)). Hal ini dilakukan untuk
-mencegah degenerasi pohon menjadi struktur linear akibat data yang sudah terurut
-secara monoton, yang akan menyebabkan kompleksitas waktu turun ke O(n).
+Dalam pengujian benchmark, data yang dimasukkan ke AVL terlebih dahulu diacak
+menggunakan std::shuffle dengan seed tetap (mt19937(42)). Meskipun AVL sudah
+menjamin O(log n), pengacakan ini tetap dilakukan agar perbandingan head-to-head 
+dapat dikontrol kondisinya sesuai skenario pengujian terbaik.
 
 b.  Operasi Range Query (O(log n + k))
 
-Pencarian rentang waktu merupakan operasi unggulan BST dalam sistem ini. Fungsi
+Pencarian rentang waktu merupakan operasi unggulan AVL dalam sistem ini. Fungsi
 rangeQuery melakukan pruning cabang secara cerdas: jika epoch suatu node lebih kecil
 dari batas awal pencarian, seluruh subpohon kirinya dilewati; jika epoch lebih besar
 dari batas akhir, seluruh subpohon kanannya dilewati. Hanya cabang yang berpotensi
@@ -140,7 +140,7 @@ berbeda), yang jauh lebih kecil dari total n entri log.
 Tabel 4.1  Ringkasan Kompleksitas Operasi Ketiga Struktur Data
 
 +-----------------+-------------------+-------------------+-------------------+
-| Operasi         | Linked List       | BST               | Hash Table        |
+| Operasi         | Linked List       | AVL Tree          | Hash Table        |
 +-----------------+-------------------+-------------------+-------------------+
 | Insert          | O(1)              | O(log n)          | O(1) amortized    |
 | Search by key   | O(n)              | O(n)              | O(1) + O(k)       |
@@ -216,7 +216,7 @@ sebagai const.
 LogManager merupakan kelas orkestrator yang menjadi inti dari seluruh sistem. Ia
 menerapkan pola desain Facade dengan menyembunyikan kompleksitas pengelolaan empat
 struktur data di balik satu antarmuka tunggal. Keempat struktur data yang dikelola
-adalah: satu instansi LogLinkedList (ll), satu instansi LogBST (bst), satu instansi
+adalah: satu instansi LogLinkedList (ll), satu instansi LogAVL (avl), satu instansi
 LogHashTable berindeks level (ht_level), dan satu instansi LogHashTable berindeks
 modul (ht_module).
 
@@ -224,7 +224,7 @@ Fungsi insertLog() mendistribusikan setiap log baru ke keempat struktur sekaligu
 dalam satu pemanggilan. LogManager juga bertanggung jawab mengarahkan setiap jenis
 query ke struktur data yang paling optimal: pencarian berbasis level dan modul
 diarahkan ke Hash Table untuk memanfaatkan lookup O(1), pencarian berbasis rentang
-waktu diarahkan ke BST untuk memanfaatkan kemampuan range query-nya, serta operasi
+waktu diarahkan ke AVL Tree untuk memanfaatkan kemampuan range query-nya, serta operasi
 statistik diarahkan ke Hash Table berindeks level karena data sudah terkelompok per
 kategori.
 
@@ -242,9 +242,8 @@ skenario operasi: insert, pencarian eksak, pencarian rentang waktu, dan penghapu
 
 Beberapa mekanisme khusus diterapkan untuk memastikan keadilan pengujian. Pertama,
 semua struktur diuji pada sampel data yang identik. Kedua, data yang dimasukkan ke
-BST diacak terlebih dahulu menggunakan std::shuffle dengan seed tetap mt19937(42)
-untuk mencegah degenerasi pohon sekaligus memastikan hasil yang konsisten di setiap
-pengulangan eksekusi. Ketiga, rentang waktu untuk skenario range search ditetapkan
+AVL diacak terlebih dahulu menggunakan std::shuffle dengan seed tetap mt19937(42)
+untuk memastikan hasil yang konsisten di setiap pengulangan eksekusi. Ketiga, rentang waktu untuk skenario range search ditetapkan
 seragam selama 7 hari dari timestamp pertama dataset.
 
 Pengukuran waktu menggunakan std::chrono::high_resolution_clock yang memberikan

@@ -64,3 +64,13 @@ std::unordered_map<std::string, int> LogHashTable::statistics() const {
 int LogHashTable::size() const {
     return size_;
 }
+
+size_t LogHashTable::estimateMemoryBytes() const {
+    size_t mem = 0;
+    for (auto& pair : buckets) {
+        mem += pair.first.capacity() + sizeof(pair.first); // string key
+        mem += pair.second.capacity() * sizeof(LogEntry) + sizeof(pair.second); // vector of LogEntry
+    }
+    mem += buckets.bucket_count() * sizeof(void*); // pointers for hash table
+    return mem;
+}

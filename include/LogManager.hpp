@@ -3,7 +3,7 @@
 
 #include "LogEntry.hpp"
 #include "LogLinkedList.hpp"
-#include "LogBST.hpp"
+#include "LogAVL.hpp"
 #include "LogHashTable.hpp"
 #include <vector>
 #include <string>
@@ -15,6 +15,7 @@ struct BenchmarkResult {
     double exact_search_ms;  // Cari berdasarkan Level/Key
     double range_search_ms;  // Cari berdasarkan Rentang Waktu
     double delete_ms;
+    double mem_kb;
 };
 
 // CSV Loader helper
@@ -22,7 +23,7 @@ std::vector<LogEntry> loadCSV(const std::string& path, int limit = -1);
 
 class LogManager {
     LogLinkedList ll;
-    LogBST        bst;
+    LogAVL        avl;
     LogHashTable  ht_level;
     LogHashTable  ht_module;
     int total;
@@ -46,7 +47,7 @@ public:
     std::vector<BenchmarkResult> getLastBenchmark();
 
     // ── BENCHMARK VALID & APPLE-TO-APPLE ───────────────────────
-    void runBenchmark(const std::vector<LogEntry>& allLogs, const std::vector<int>& sizes);
+    void runBenchmark(const std::vector<LogEntry>& allLogs, const std::vector<int>& sizes, int repeat = 5);
 };
 
 #endif // LOG_MANAGER_HPP

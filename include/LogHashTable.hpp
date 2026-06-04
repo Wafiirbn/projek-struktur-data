@@ -31,6 +31,8 @@ public:
     // STATISTIK — O(1) per level/modul
     std::unordered_map<std::string, int> statistics() const;
 
+    size_t estimateMemoryBytes() const;
+
     int size() const;
 };
 

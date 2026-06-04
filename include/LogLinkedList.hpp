@@ -39,6 +39,9 @@ public:
     // STATISTIK per level — O(n)
     std::unordered_map<std::string, int> statistics() const;
 
+    // Estimasi memori
+    size_t estimateMemoryBytes() const;
+
     int size() const;
 
     void printAll(int limit = 10) const;

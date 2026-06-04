@@ -1,9 +1,10 @@
 /*
  * ============================================================
  * SISTEM MONITORING & LOG AKTIVITAS APLIKASI
- * Topik 9 — Analisis Struktur Data (Optimized)
+ * Topik 9 — Analisis Struktur Data (Final — Minggu ke-14)
  * Bahasa: C++17
- * Struktur Data: Linked List | BST | Hash Table
+ * Struktur Data: Linked List | AVL Tree | Hash Table
+ * Fitur Tambahan: Pengukuran Memori, Benchmark 5x Repeat
  * ============================================================
  */
 
@@ -22,14 +23,15 @@ using namespace std::chrono;
 
 void exportBenchmarkToCSV(const string& filename, const vector<BenchmarkResult>& results) {
     ofstream f(filename);
-    f << "Struktur,n,Insert (ms),Exact Search Level (ms),Range Search Time (ms),Delete (ms)\n";
+    f << "Struktur,n,Insert (ms),Exact Search Level (ms),Range Search Time (ms),Delete (ms),Memory (KB)\n";
     for (auto& r : results) {
         f << r.structure << ","
           << r.n << ","
           << fixed << setprecision(4) << r.insert_ms << ","
           << r.exact_search_ms << ","
           << r.range_search_ms << ","
-          << r.delete_ms << "\n";
+          << r.delete_ms << ","
+          << setprecision(1) << r.mem_kb << "\n";
     }
     f.close();
     cout << "📊 Hasil benchmark berhasil disimpan ke '" << filename << "'\n";
@@ -39,27 +41,28 @@ void exportBenchmarkToCSV(const string& filename, const vector<BenchmarkResult>&
 //  CLI INTERFACE
 // ═══════════════════════════════════════════════════════════════
 void printMenu() {
-    cout << "\n╔══════════════════════════════════════╗\n";
-    cout << "║   SISTEM MONITORING LOG AKTIVITAS    ║\n";
-    cout << "╠══════════════════════════════════════╣\n";
-    cout << "║  1. Insert log baru                  ║\n";
-    cout << "║  2. Search by level                  ║\n";
-    cout << "║  3. Search by modul                  ║\n";
-    cout << "║  4. Search by rentang waktu          ║\n";
-    cout << "║  5. Tampilkan log ERROR              ║\n";
-    cout << "║  6. Delete log lama (by cutoff)      ║\n";
-    cout << "║  7. Statistik log                    ║\n";
-    cout << "║  8. Jalankan benchmark               ║\n";
-    cout << "║  9. Export hasil benchmark ke CSV    ║\n";
-    cout << "║  0. Keluar                           ║\n";
-    cout << "╚══════════════════════════════════════╝\n";
+    cout << "\n╔═══════════════════════════════════════════╗\n";
+    cout << "║   SISTEM MONITORING LOG AKTIVITAS          ║\n";
+    cout << "║   Struktur: Linked List | AVL | HashTable  ║\n";
+    cout << "╠═══════════════════════════════════════════╣\n";
+    cout << "║  1. Insert log baru                        ║\n";
+    cout << "║  2. Search by level                        ║\n";
+    cout << "║  3. Search by modul                        ║\n";
+    cout << "║  4. Search by rentang waktu                ║\n";
+    cout << "║  5. Tampilkan log ERROR                    ║\n";
+    cout << "║  6. Delete log lama (by cutoff)            ║\n";
+    cout << "║  7. Statistik log                          ║\n";
+    cout << "║  8. Jalankan benchmark                     ║\n";
+    cout << "║  9. Export hasil benchmark ke CSV          ║\n";
+    cout << "║  0. Keluar                                 ║\n";
+    cout << "╚═══════════════════════════════════════════╝\n";
     cout << "Pilihan: ";
 }
 
 void printResults(const vector<LogEntry>& results, int limit = 10) {
     cout << "\n📋 Ditemukan " << results.size() << " log";
     if ((int)results.size() > limit) cout << " (menampilkan " << limit << " pertama)";
-    cout << ":\n" << string(70, '-') << "\n";
+    cout << ":\n" << string(75, '-') << "\n";
     int cnt = 0;
     for (auto& e : results) {
         if (cnt++ >= limit) break;
@@ -71,13 +74,17 @@ void printResults(const vector<LogEntry>& results, int limit = 10) {
 //  MAIN PROGRAM
 // ═══════════════════════════════════════════════════════════════
 int main(int argc, char* argv[]) {
-    cout << "╔══════════════════════════════════════════════════════════╗\n";
-    cout << "║   Sistem Monitoring & Log Aktivitas Aplikasi             ║\n";
-    cout << "║   Topik 9 — Analisis Struktur Data (Fixed & Valid)       ║\n";
-    cout << "╚══════════════════════════════════════════════════════════╝\n\n";
+    cout << "╔══════════════════════════════════════════════════════════════╗\n";
+    cout << "║   Sistem Monitoring & Log Aktivitas Aplikasi                 ║\n";
+    cout << "║   Topik 9 — Analisis Struktur Data (Final — Minggu ke-14)    ║\n";
+    cout << "║   Struktur: Linked List | AVL Tree | Hash Table              ║\n";
+    cout << "╚══════════════════════════════════════════════════════════════╝\n\n";
 
-    string csv_path = "logs_dummy.csv";
+    // Default: system_logs.csv (100k entries)
+    string csv_path = "system_logs.csv";
     if (argc > 1) csv_path = argv[1];
+
+    cout << "📁 Menggunakan dataset: " << csv_path << "\n";
 
     LogManager manager;
     manager.loadFromCSV(csv_path);
@@ -96,7 +103,7 @@ int main(int argc, char* argv[]) {
         if (choice == 0) {
             cout << "👋 Keluar dari sistem. Sampai jumpa!\n";
             break;
-        } 
+        }
         else if (choice == 1) {
             LogEntry e;
             cout << "Log ID    : "; getline(cin, e.log_id);
@@ -105,8 +112,8 @@ int main(int argc, char* argv[]) {
             cout << "Module    : "; getline(cin, e.module);
             cout << "Message   : "; getline(cin, e.message);
             manager.insertLog(e);
-            cout << "✅ Sukses memasukkan data baru.\n";
-        } 
+            cout << "✅ Log baru berhasil ditambahkan ke sistem.\n";
+        }
         else if (choice == 2) {
             string level;
             cout << "Level (INFO/WARNING/ERROR): "; getline(cin, level);
@@ -114,17 +121,17 @@ int main(int argc, char* argv[]) {
             auto res = manager.searchByLevel(level);
             double ms = duration<double,milli>(high_resolution_clock::now()-t0).count();
             printResults(res);
-            cout << "⏱  Waktu Eksplorasi (Hash): " << fixed << setprecision(4) << ms << " ms\n";
-        } 
+            cout << "⏱  Waktu Pencarian (Hash Table, O(1)): " << fixed << setprecision(4) << ms << " ms\n";
+        }
         else if (choice == 3) {
             string mod;
-            cout << "Modul (auth/api_gateway/database/payment): "; getline(cin, mod);
+            cout << "Modul (auth/api/database/payment DLL): "; getline(cin, mod);
             auto t0 = high_resolution_clock::now();
             auto res = manager.searchByModule(mod);
             double ms = duration<double,milli>(high_resolution_clock::now()-t0).count();
             printResults(res);
-            cout << "⏱  Waktu Eksplorasi (Hash): " << fixed << setprecision(4) << ms << " ms\n";
-        } 
+            cout << "⏱  Waktu Pencarian (Hash Table, O(1)): " << fixed << setprecision(4) << ms << " ms\n";
+        }
         else if (choice == 4) {
             string t_start, t_end;
             cout << "Waktu mulai (YYYY-MM-DD HH:MM:SS): "; getline(cin, t_start);
@@ -133,38 +140,41 @@ int main(int argc, char* argv[]) {
             auto res = manager.searchByTimeRange(t_start, t_end);
             double ms = duration<double,milli>(high_resolution_clock::now()-t0).count();
             printResults(res);
-            cout << "⏱  Waktu Eksplorasi (BST): " << fixed << setprecision(4) << ms << " ms\n";
-        } 
+            cout << "⏱  Waktu Pencarian (AVL Tree, O(log n + k)): " << fixed << setprecision(4) << ms << " ms\n";
+        }
         else if (choice == 5) {
             auto t0 = high_resolution_clock::now();
             auto res = manager.getErrors();
             double ms = duration<double,milli>(high_resolution_clock::now()-t0).count();
             printResults(res);
-            cout << "⏱  Waktu Eksplorasi: " << fixed << setprecision(4) << ms << " ms\n";
-        } 
+            cout << "⏱  Waktu Pencarian ERROR (Hash Table): " << fixed << setprecision(4) << ms << " ms\n";
+        }
         else if (choice == 6) {
             string cutoff;
             cout << "Cutoff timestamp (YYYY-MM-DD HH:MM:SS): "; getline(cin, cutoff);
             auto t0 = high_resolution_clock::now();
             manager.deleteBefore(cutoff);
             double ms = duration<double,milli>(high_resolution_clock::now()-t0).count();
-            cout << "⏱  Total Durasi Eksekusi: " << fixed << setprecision(4) << ms << " ms\n";
-        } 
+            cout << "⏱  Total Durasi Delete: " << fixed << setprecision(4) << ms << " ms\n";
+        }
         else if (choice == 7) {
             manager.printStatistics();
-        } 
+        }
         else if (choice == 8) {
-            vector<int> sizes = {1000, 3000, 5000, 10000};
-            manager.runBenchmark(allLogs, sizes);
-        } 
+            // Ukuran benchmark: 1k, 5k, 10k, 25k, 50k, 100k
+            vector<int> sizes = {1000, 5000, 10000, 25000, 50000, 100000};
+            cout << "\n⚙️ Benchmark sizes: 1k, 5k, 10k, 25k, 50k, 100k (5x repeat masing-masing)\n";
+            cout << "⏳ Proses ini membutuhkan beberapa menit untuk dataset besar...\n";
+            manager.runBenchmark(allLogs, sizes, 5);
+        }
         else if (choice == 9) {
             auto res = manager.getLastBenchmark();
             if (res.empty()) {
-                cout << "⚠️ Silakan jalankan fitur benchmark (Menu 8) terlebih dahulu untuk mengambil data!\n";
+                cout << "⚠️ Silakan jalankan benchmark (Menu 8) terlebih dahulu!\n";
             } else {
                 exportBenchmarkToCSV("benchmark_results.csv", res);
             }
-        } 
+        }
         else {
             cout << "⚠️ Opsi menu tidak tersedia.\n";
         }
