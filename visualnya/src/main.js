@@ -2,30 +2,56 @@ import Plotly from "plotly.js-dist-min";
 import Papa from "papaparse";
 
 const colors = {
-  HashTable: '#2196F3',    // Biru (O(1) avg)
-  BST: '#FF9800',          // Oranye (O(log n) avg)
-  LinkedList: '#4CAF50'    // Hijau
+  HashTable: '#2196F3',    
+  BST: '#FF9800',         
+  LinkedList: '#4CAF50'   
 };
 
-const labels = {
-  HashTable: 'Hash Table (O(1) avg)',
-  BST: 'BST (O(log n) avg)',
-  LinkedList: 'Linked List (O(n) untuk delete)'
+const baseLabels = {
+  HashTable: 'Hash Table',
+  BST: 'BST',
+  LinkedList: 'Linked List'
 };
+
+function getDynamicLabel(ds, op) {
+  if (op === 'INSERT') {
+    if (ds === 'HashTable') return 'Hash Table (O(1) avg)';
+    if (ds === 'BST') return 'BST (O(log n) avg)';
+    if (ds === 'LinkedList') return 'Linked List (O(1))';
+  }
+  if (op === 'SEARCH') {
+    if (ds === 'HashTable') return 'Hash Table (O(1))';
+    if (ds === 'BST') return 'BST (O(log n))';
+    if (ds === 'LinkedList') return 'Linked List (O(n))';
+  }
+  if (op === 'DELETE') {
+    if (ds === 'HashTable') return 'Hash Table (O(1))';
+    if (ds === 'BST') return 'BST (O(log n))';
+    if (ds === 'LinkedList') return 'Linked List (O(n))';
+  }
+  return baseLabels[ds];
+}
 
 const plotConfig = {
   responsive: true,
-  displayModeBar: true
+  displayModeBar: true,
+  toImageButtonOptions: {
+    format: 'png',
+    filename: 'benchmark_chart',
+    height: 800,
+    width: 1200,
+    scale: 2
+  }
 };
 
-// Konfigurasi font dan dasar tampilan layout
 const baseLayoutStyles = {
-  font: { family: "DejaVu Sans, Arial, sans-serif" },
-  paper_bgcolor: "rgba(0,0,0,0)",
-  plot_bgcolor: "rgba(0,0,0,0)"
+  font: { family: "Inter, Arial, sans-serif", size: 11 },
+  paper_bgcolor: "rgba(255,255,255,1)",
+  plot_bgcolor: "rgba(245,245,245,0.5)",
+  hovermode: 'closest',
+  showlegend: true
 };
 
-// Membaca file benchmark dari folder public/ atau root public server Vite
 fetch("/benchmark_results.csv")
   .then(response => {
     if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -39,7 +65,7 @@ fetch("/benchmark_results.csv")
     });
 
     const rawData = parsed.data;
-    console.log("Data CSV berhasil dimuat:", rawData);
+    console.log("✓ Data CSV berhasil dimuat - Total baris:", rawData.length);
 
     const dataStructure = {
       INSERT: { HashTable: {}, BST: {}, LinkedList: {} },
@@ -90,38 +116,38 @@ function intOrNull(val) {
  */
 function renderSingleOperationBar(data, nsList, op, elementId) {
   const dsList = ['HashTable', 'BST', 'LinkedList'];
-  
-  // Format label sumbu X dengan tanda koma ribuan (e.g. 10,000)
   const xLabels = nsList.map(n => n.toLocaleString('en-US'));
 
   const traces = dsList.map(ds => {
     const yValues = nsList.map(n => {
       const val = data[op][ds][n];
-      // Jika nilai -1 atau kosong, jadikan 0 (skip bar)
       return (val !== undefined && val >= 0) ? val : 0;
     });
+
+    // 3. PERBAIKAN: Gunakan fungsi label dinamis
+    const currentLabel = getDynamicLabel(ds, op);
 
     return {
       x: xLabels,
       y: yValues,
-      name: labels[ds],
+      name: currentLabel,
       type: 'bar',
       marker: { color: colors[ds] },
-      text: yValues.map(v => v > 0 ? v.toLocaleString('en-US') : ''),
+      text: yValues.map(v => v > 0 ? v.toLocaleString('en-US') : '0'),
       textposition: 'outside',
       textfont: { size: 9 },
-      hovertemplate: `<b>${labels[ds]}</b><br>N: %{x}<br>Waktu: %{y} μs<extra></extra>`
+      hovertemplate: `<b>${currentLabel}</b><br>N: %{x}<br>Waktu: %{y} μs<extra></extra>`
     };
   });
 
   const layout = {
     ...baseLayoutStyles,
-    title: {
-      text: `<b>Perbandingan Performa: ${op}</b><br><span style="font-size:11px; color:#64748b;">Sistem Manajemen Inventori Gudang</span>`,
-      x: 0.05
-    },
     xaxis: { title: "Jumlah Data (N)", tickmode: "array", tickvals: xLabels },
-    yaxis: { title: "Waktu Eksekusi (μs)", gridcolor: "#e2e8f0" },
+    yaxis: { 
+      title: "Waktu Eksekusi (μs)", 
+      gridcolor: "#e2e8f0",
+      type: 'linear' 
+    },
     barmode: 'group',
     bargap: 0.25,
     bargroupgap: 0.1,
@@ -132,9 +158,6 @@ function renderSingleOperationBar(data, nsList, op, elementId) {
   Plotly.newPlot(elementId, traces, layout, plotConfig);
 }
 
-/**
- * RENDER PLOT 5: Line Chart Skalabilitas Terintegrasi
- */
 function renderScalabilityLineChart(data, nsList, operations, elementId) {
   const dsList = ['HashTable', 'BST', 'LinkedList'];
   const symbols = { HashTable: 'circle', BST: 'square', LinkedList: 'triangle-up' };
@@ -150,17 +173,18 @@ function renderScalabilityLineChart(data, nsList, operations, elementId) {
 
       if (validPoints.length === 0) return;
 
+      const currentLabel = getDynamicLabel(ds, op);
+
       traces.push({
         x: validPoints.map(pt => pt.n),
         y: validPoints.map(pt => pt.v),
-        // Kelompokkan legend berdasarkan struktur data agar rapi saat diklik
-        name: `${op} - ${ds}`,
+        name: `${op} - ${baseLabels[ds]}`,
         legendgroup: ds,
         type: 'scatter',
         mode: 'lines+markers',
         line: { color: colors[ds], width: 2 },
         marker: { symbol: symbols[ds], size: 7 },
-        hovertemplate: `<b>${op} (${ds})</b><br>N: %{x}<br>Waktu: %{y} μs<extra></extra>`
+        hovertemplate: `<b>${op} (${baseLabels[ds]})</b><br>N: %{x}<br>Waktu: %{y} μs<extra></extra>`
       });
     });
   });
@@ -168,7 +192,7 @@ function renderScalabilityLineChart(data, nsList, operations, elementId) {
   const layout = {
     ...baseLayoutStyles,
     title: {
-      text: `<b>Perbandingan Skalabilitas: Hash Table vs BST vs Linked List</b><br><span style="font-size:11px; color:#64748b;">Sistem Manajemen Inventori Gudang</span>`,
+      text: `<b>Perbandingan Skalabilitas: Hash Table vs BST vs Linked List</b><br><span style="font-size:11px; color:#64748b;">Sistem Log Monitoring</span>`,
       x: 0.05
     },
     xaxis: { title: "Ukuran Elemen Data (N)", gridcolor: "#e2e8f0" },
