@@ -37,8 +37,6 @@ strukdat/
 │   │   └── style.css
 │   └── package.json
 │
-├── BAB4_IMPLEMENTASI.txt        # Laporan akademis implementasi struktur data
-├── BAB5_EKSPERIMEN_PENGUJIAN.txt# Laporan hasil benchmark & replikasi
 ├── Makefile                     # Skrip otomatisasi build program
 └── system_logs.csv              # Dataset sintetis berisi 100k log
 ```
