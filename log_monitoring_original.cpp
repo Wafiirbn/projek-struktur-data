@@ -1,7 +1,7 @@
-/*
+﻿/*
  * ============================================================
  * SISTEM MONITORING & LOG AKTIVITAS APLIKASI
- * Topik 9 — Analisis Struktur Data (Final — Minggu ke-14)
+ * Topik 9 ΓÇö Analisis Struktur Data (Final ΓÇö Minggu ke-14)
  * Bahasa: C++17
  * Struktur Data: Linked List | AVL Tree | Hash Table
  * Fitur Tambahan: Pengukuran Memori, Benchmark 5x Repeat
@@ -26,9 +26,9 @@
 using namespace std;
 using namespace std::chrono;
 
-// ═══════════════════════════════════════════════════════════════
+// ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
 //  STRUKTUR DATA: LogEntry
-// ═══════════════════════════════════════════════════════════════
+// ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
 struct LogEntry {
     string log_id;
     string timestamp;
@@ -57,9 +57,9 @@ struct LogEntry {
     }
 };
 
-// ═══════════════════════════════════════════════════════════════
+// ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
 //  STRUKTUR 1: SINGLY LINKED LIST
-// ═══════════════════════════════════════════════════════════════
+// ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
 struct LLNode {
     LogEntry entry;
     LLNode* next;
@@ -79,7 +79,7 @@ public:
         while (cur) { LLNode* tmp = cur->next; delete cur; cur = tmp; }
     }
 
-    // INSERT — O(1)
+    // INSERT ΓÇö O(1)
     void insert(const LogEntry& e) {
         LLNode* node = new LLNode(e);
         if (!tail) head = tail = node;
@@ -87,7 +87,7 @@ public:
         size_++;
     }
 
-    // SEARCH by level — O(n)
+    // SEARCH by level ΓÇö O(n)
     vector<LogEntry> searchByLevel(const string& level) const {
         vector<LogEntry> res;
         for (LLNode* cur = head; cur; cur = cur->next)
@@ -95,7 +95,7 @@ public:
         return res;
     }
 
-    // SEARCH by module — O(n)
+    // SEARCH by module ΓÇö O(n)
     vector<LogEntry> searchByModule(const string& mod) const {
         vector<LogEntry> res;
         for (LLNode* cur = head; cur; cur = cur->next)
@@ -103,7 +103,7 @@ public:
         return res;
     }
 
-    // SEARCH by time range — O(n)
+    // SEARCH by time range ΓÇö O(n)
     vector<LogEntry> searchByTimeRange(const string& t_start, const string& t_end) const {
         LogEntry tmp; tmp.timestamp = t_start; long long ts = tmp.toEpoch();
         tmp.timestamp = t_end;                 long long te = tmp.toEpoch();
@@ -115,7 +115,7 @@ public:
         return res;
     }
 
-    // DELETE log lama (sebelum cutoff) — O(n)
+    // DELETE log lama (sebelum cutoff) ΓÇö O(n)
     int deleteBefore(const string& cutoff) {
         LogEntry tmp; tmp.timestamp = cutoff;
         long long cut = tmp.toEpoch();
@@ -140,7 +140,7 @@ public:
         return deleted;
     }
 
-    // STATISTIK per level — O(n)
+    // STATISTIK per level ΓÇö O(n)
     unordered_map<string, int> statistics() const {
         unordered_map<string, int> stats;
         for (LLNode* cur = head; cur; cur = cur->next)
@@ -165,11 +165,11 @@ public:
     }
 };
 
-// ═══════════════════════════════════════════════════════════════
+// ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
 //  STRUKTUR 2: AVL TREE (Self-Balancing BST by timestamp)
 //  Keunggulan vs BST biasa: Selalu O(log n) worst-case
 //  karena menjaga |balance factor| <= 1 dengan rotasi otomatis
-// ═══════════════════════════════════════════════════════════════
+// ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
 struct AVLNode {
     long long key;   // Unix epoch
     LogEntry entry;
@@ -279,7 +279,7 @@ class LogAVL {
         inorder(node->right, res);
     }
 
-    // Build balanced AVL dari array terurut — digunakan setelah delete rekonstruksi
+    // Build balanced AVL dari array terurut ΓÇö digunakan setelah delete rekonstruksi
     AVLNode* buildFromSorted(const vector<LogEntry>& logs, int start, int end) {
         if (start > end) return nullptr;
         int mid = start + (end - start) / 2;
@@ -294,13 +294,13 @@ public:
     LogAVL() : root(nullptr), size_(0) {}
     ~LogAVL() { destroyTree(root); }
 
-    // INSERT — O(log n) WORST-CASE (AVL selalu seimbang)
+    // INSERT ΓÇö O(log n) WORST-CASE (AVL selalu seimbang)
     void insert(const LogEntry& e) {
         root = insertNode(root, e);
         size_++;
     }
 
-    // SEARCH by time range — O(log n + k)
+    // SEARCH by time range ΓÇö O(log n + k)
     vector<LogEntry> searchByTimeRange(const string& t_start, const string& t_end) const {
         LogEntry tmp; tmp.timestamp = t_start; long long ts = tmp.toEpoch();
         tmp.timestamp = t_end;                 long long te = tmp.toEpoch();
@@ -309,7 +309,7 @@ public:
         return res;
     }
 
-    // SEARCH by level — O(n) traversal (AVL tidak diindeks by level)
+    // SEARCH by level ΓÇö O(n) traversal (AVL tidak diindeks by level)
     vector<LogEntry> searchByLevel(const string& level) const {
         vector<LogEntry> all;
         inorder(root, all);
@@ -319,7 +319,7 @@ public:
         return res;
     }
 
-    // DELETE log lama — Rebuild dari array terurut O(n)
+    // DELETE log lama ΓÇö Rebuild dari array terurut O(n)
     int deleteBefore(const string& cutoff) {
         LogEntry tmp; tmp.timestamp = cutoff;
         long long cut = tmp.toEpoch();
@@ -348,9 +348,9 @@ public:
     int size() const { return size_; }
 };
 
-// ═══════════════════════════════════════════════════════════════
+// ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
 //  STRUKTUR 3: HASH TABLE (separate chaining)
-// ═══════════════════════════════════════════════════════════════
+// ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
 class LogHashTable {
     string key_field;   // "level" atau "module"
     unordered_map<string, vector<LogEntry>> buckets;
@@ -365,19 +365,19 @@ class LogHashTable {
 public:
     explicit LogHashTable(const string& kf) : key_field(kf), size_(0) {}
 
-    // INSERT — O(1) amortized
+    // INSERT ΓÇö O(1) amortized
     void insert(const LogEntry& e) {
         buckets[getKey(e)].push_back(e);
         size_++;
     }
 
-    // SEARCH by key — O(1) + O(k)
+    // SEARCH by key ΓÇö O(1) + O(k)
     vector<LogEntry> search(const string& key) const {
         auto it = buckets.find(key);
         return (it != buckets.end()) ? it->second : vector<LogEntry>{};
     }
 
-    // SEARCH by time range — O(n) untuk komparasi benchmark
+    // SEARCH by time range ΓÇö O(n) untuk komparasi benchmark
     vector<LogEntry> searchByTimeRange(const string& t_start, const string& t_end) const {
         LogEntry tmp; tmp.timestamp = t_start; long long ts = tmp.toEpoch();
         tmp.timestamp = t_end;                 long long te = tmp.toEpoch();
@@ -391,7 +391,7 @@ public:
         return res;
     }
 
-    // DELETE log lama — O(n)
+    // DELETE log lama ΓÇö O(n)
     int deleteBefore(const string& cutoff) {
         LogEntry tmp; tmp.timestamp = cutoff;
         long long cut = tmp.toEpoch();
@@ -408,7 +408,7 @@ public:
         return deleted;
     }
 
-    // STATISTIK — O(1) per level/modul
+    // STATISTIK ΓÇö O(1) per level/modul
     unordered_map<string, int> statistics() const {
         unordered_map<string, int> stats;
         for (auto it = buckets.begin(); it != buckets.end(); ++it)
@@ -424,9 +424,9 @@ public:
     int size() const { return size_; }
 };
 
-// ═══════════════════════════════════════════════════════════════
+// ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
 //  BENCHMARK HELPER
-// ═══════════════════════════════════════════════════════════════
+// ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
 struct BenchmarkResult {
     string structure;
     int n;
@@ -466,7 +466,7 @@ void exportBenchmarkToCSV(const string& filename, const vector<BenchmarkResult>&
           << r.insert_mem_kb << "\n";
     }
     f.close();
-    cout << "📊 Hasil benchmark berhasil disimpan ke '" << filename << "'\n";
+    cout << "≡ƒôè Hasil benchmark berhasil disimpan ke '" << filename << "'\n";
 }
 
 void printBenchmarkTable(const vector<BenchmarkResult>& results) {
@@ -493,14 +493,14 @@ void printBenchmarkTable(const vector<BenchmarkResult>& results) {
     cout << string(105, '=') << "\n";
 }
 
-// ═══════════════════════════════════════════════════════════════
+// ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
 //  CSV LOADER
-// ═══════════════════════════════════════════════════════════════
+// ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
 vector<LogEntry> loadCSV(const string& path, int limit = -1) {
     vector<LogEntry> logs;
     ifstream f(path);
     if (!f.is_open()) {
-        cerr << "❌ Gagal membuka file: " << path << "\n";
+        cerr << "Γ¥î Gagal membuka file: " << path << "\n";
         return logs;
     }
     string line;
@@ -525,9 +525,9 @@ vector<LogEntry> loadCSV(const string& path, int limit = -1) {
     return logs;
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  LOG MANAGER — Orkestrator Utama
-// ═══════════════════════════════════════════════════════════════
+// ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+//  LOG MANAGER ΓÇö Orkestrator Utama
+// ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
 class LogManager {
     LogLinkedList ll;
     LogAVL        avl;
@@ -542,9 +542,9 @@ public:
     void loadFromCSV(const string& path, int limit = -1) {
         auto logs = loadCSV(path, limit);
         if (logs.empty()) return;
-        cout << "📂 Memuat " << logs.size() << " entri log ke sistem...\n";
+        cout << "≡ƒôé Memuat " << logs.size() << " entri log ke sistem...\n";
         for (auto& e : logs) insertLog(e);
-        cout << "✅ Sinkronisasi selesai: " << total << " log dimuat\n";
+        cout << "Γ£à Sinkronisasi selesai: " << total << " log dimuat\n";
     }
 
     void insertLog(const LogEntry& e) {
@@ -566,12 +566,12 @@ public:
         int d3 = ht_level.deleteBefore(cutoff);
         int d4 = ht_module.deleteBefore(cutoff);
         total -= d1;
-        cout << "🗑️ Berhasil menghapus: " << d1 << " log lawas (sebelum " << cutoff << ")\n";
+        cout << "≡ƒùæ∩╕Å Berhasil menghapus: " << d1 << " log lawas (sebelum " << cutoff << ")\n";
     }
 
     void printStatistics() {
         auto stats = ht_level.statistics();
-        cout << "\n📊 STATISTIK SISTEM LOG\n" << string(50, '-') << "\n";
+        cout << "\n≡ƒôè STATISTIK SISTEM LOG\n" << string(50, '-') << "\n";
         int grand_total = 0;
         for (auto it = stats.begin(); it != stats.end(); ++it) {
             cout << "  " << setw(12) << left << it->first << ": " << setw(8) << it->second << " log\n";
@@ -585,11 +585,11 @@ public:
     int getTotal() const { return total; }
     vector<BenchmarkResult> getLastBenchmark() { return last_benchmark_results; }
 
-    // ── BENCHMARK APPLE-TO-APPLE dengan 5x Repeat ───────────────
+    // ΓöÇΓöÇ BENCHMARK APPLE-TO-APPLE dengan 5x Repeat ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
     void runBenchmark(const vector<LogEntry>& allLogs, const vector<int>& sizes,
                       int repeat = 5) {
         if (allLogs.empty()) {
-            cout << "⚠️ Tidak ada data untuk benchmark.\n";
+            cout << "ΓÜá∩╕Å Tidak ada data untuk benchmark.\n";
             return;
         }
         cout << "\n" << string(75, '=') << "\n";
@@ -602,7 +602,7 @@ public:
 
         for (int n : sizes) {
             if (n > (int)allLogs.size()) {
-                cout << "⚠️ Lewati n=" << n << " (data tidak cukup, hanya " << allLogs.size() << " entri)\n";
+                cout << "ΓÜá∩╕Å Lewati n=" << n << " (data tidak cukup, hanya " << allLogs.size() << " entri)\n";
                 continue;
             }
             vector<LogEntry> sample(allLogs.begin(), allLogs.begin() + n);
@@ -624,9 +624,9 @@ public:
             strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", tminfo);
             string t_end = string(buf);
 
-            cout << "\n▶ n = " << n << " entri (repeat=" << repeat << "x)...\n";
+            cout << "\nΓû╢ n = " << n << " entri (repeat=" << repeat << "x)...\n";
 
-            // ── Skenario 1: Linked List ──
+            // ΓöÇΓöÇ Skenario 1: Linked List ΓöÇΓöÇ
             {
                 // INSERT (repeat kali, rata-rata)
                 double t_ins = measureMsAvg([&]{
@@ -655,12 +655,12 @@ public:
                 double mem_kb = ll_mem.estimateMemoryBytes() / 1024.0;
 
                 last_benchmark_results.push_back({"LinkedList", n, t_ins, t_ex, t_rng, t_del, mem_kb});
-                cout << "  ✓ LinkedList: ins=" << fixed << setprecision(3) << t_ins
+                cout << "  Γ£ô LinkedList: ins=" << fixed << setprecision(3) << t_ins
                      << "ms, search=" << t_ex << "ms, range=" << t_rng
                      << "ms, del=" << t_del << "ms, mem=" << setprecision(1) << mem_kb << " KB\n";
             }
 
-            // ── Skenario 2: AVL Tree ──
+            // ΓöÇΓöÇ Skenario 2: AVL Tree ΓöÇΓöÇ
             {
                 double t_ins = measureMsAvg([&]{
                     LogAVL avl_b;
@@ -685,12 +685,12 @@ public:
                 double mem_kb = avl_mem.estimateMemoryBytes() / 1024.0;
 
                 last_benchmark_results.push_back({"AVL Tree", n, t_ins, t_ex, t_rng, t_del, mem_kb});
-                cout << "  ✓ AVL Tree:  ins=" << fixed << setprecision(3) << t_ins
+                cout << "  Γ£ô AVL Tree:  ins=" << fixed << setprecision(3) << t_ins
                      << "ms, search=" << t_ex << "ms, range=" << t_rng
                      << "ms, del=" << t_del << "ms, mem=" << setprecision(1) << mem_kb << " KB\n";
             }
 
-            // ── Skenario 3: Hash Table ──
+            // ΓöÇΓöÇ Skenario 3: Hash Table ΓöÇΓöÇ
             {
                 double t_ins = measureMsAvg([&]{
                     LogHashTable ht_b("level");
@@ -715,7 +715,7 @@ public:
                 double mem_kb = ht_mem.estimateMemoryBytes() / 1024.0;
 
                 last_benchmark_results.push_back({"HashTable", n, t_ins, t_ex, t_rng, t_del, mem_kb});
-                cout << "  ✓ HashTable: ins=" << fixed << setprecision(3) << t_ins
+                cout << "  Γ£ô HashTable: ins=" << fixed << setprecision(3) << t_ins
                      << "ms, search=" << t_ex << "ms, range=" << t_rng
                      << "ms, del=" << t_del << "ms, mem=" << setprecision(1) << mem_kb << " KB\n";
             }
@@ -724,30 +724,30 @@ public:
     }
 };
 
-// ═══════════════════════════════════════════════════════════════
+// ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
 //  CLI INTERFACE
-// ═══════════════════════════════════════════════════════════════
+// ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
 void printMenu() {
-    cout << "\n╔═══════════════════════════════════════════╗\n";
-    cout << "║   SISTEM MONITORING LOG AKTIVITAS          ║\n";
-    cout << "║   Struktur: Linked List | AVL | HashTable  ║\n";
-    cout << "╠═══════════════════════════════════════════╣\n";
-    cout << "║  1. Insert log baru                        ║\n";
-    cout << "║  2. Search by level                        ║\n";
-    cout << "║  3. Search by modul                        ║\n";
-    cout << "║  4. Search by rentang waktu                ║\n";
-    cout << "║  5. Tampilkan log ERROR                    ║\n";
-    cout << "║  6. Delete log lama (by cutoff)            ║\n";
-    cout << "║  7. Statistik log                          ║\n";
-    cout << "║  8. Jalankan benchmark                     ║\n";
-    cout << "║  9. Export hasil benchmark ke CSV          ║\n";
-    cout << "║  0. Keluar                                 ║\n";
-    cout << "╚═══════════════════════════════════════════╝\n";
+    cout << "\nΓòöΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòù\n";
+    cout << "Γòæ   SISTEM MONITORING LOG AKTIVITAS          Γòæ\n";
+    cout << "Γòæ   Struktur: Linked List | AVL | HashTable  Γòæ\n";
+    cout << "ΓòáΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòú\n";
+    cout << "Γòæ  1. Insert log baru                        Γòæ\n";
+    cout << "Γòæ  2. Search by level                        Γòæ\n";
+    cout << "Γòæ  3. Search by modul                        Γòæ\n";
+    cout << "Γòæ  4. Search by rentang waktu                Γòæ\n";
+    cout << "Γòæ  5. Tampilkan log ERROR                    Γòæ\n";
+    cout << "Γòæ  6. Delete log lama (by cutoff)            Γòæ\n";
+    cout << "Γòæ  7. Statistik log                          Γòæ\n";
+    cout << "Γòæ  8. Jalankan benchmark                     Γòæ\n";
+    cout << "Γòæ  9. Export hasil benchmark ke CSV          Γòæ\n";
+    cout << "Γòæ  0. Keluar                                 Γòæ\n";
+    cout << "ΓòÜΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓò¥\n";
     cout << "Pilihan: ";
 }
 
 void printResults(const vector<LogEntry>& results, int limit = 10) {
-    cout << "\n📋 Ditemukan " << results.size() << " log";
+    cout << "\n≡ƒôï Ditemukan " << results.size() << " log";
     if ((int)results.size() > limit) cout << " (menampilkan " << limit << " pertama)";
     cout << ":\n" << string(75, '-') << "\n";
     int cnt = 0;
@@ -757,21 +757,21 @@ void printResults(const vector<LogEntry>& results, int limit = 10) {
     }
 }
 
-// ═══════════════════════════════════════════════════════════════
+// ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
 //  MAIN PROGRAM
-// ═══════════════════════════════════════════════════════════════
+// ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
 int main(int argc, char* argv[]) {
-    cout << "╔══════════════════════════════════════════════════════════════╗\n";
-    cout << "║   Sistem Monitoring & Log Aktivitas Aplikasi                 ║\n";
-    cout << "║   Topik 9 — Analisis Struktur Data (Final — Minggu ke-14)    ║\n";
-    cout << "║   Struktur: Linked List | AVL Tree | Hash Table              ║\n";
-    cout << "╚══════════════════════════════════════════════════════════════╝\n\n";
+    cout << "ΓòöΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòù\n";
+    cout << "Γòæ   Sistem Monitoring & Log Aktivitas Aplikasi                 Γòæ\n";
+    cout << "Γòæ   Topik 9 ΓÇö Analisis Struktur Data (Final ΓÇö Minggu ke-14)    Γòæ\n";
+    cout << "Γòæ   Struktur: Linked List | AVL Tree | Hash Table              Γòæ\n";
+    cout << "ΓòÜΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓò¥\n\n";
 
     // Default: system_logs.csv (100k entries)
     string csv_path = "system_logs.csv";
     if (argc > 1) csv_path = argv[1];
 
-    cout << "📁 Menggunakan dataset: " << csv_path << "\n";
+    cout << "≡ƒôü Menggunakan dataset: " << csv_path << "\n";
 
     LogManager manager;
     manager.loadFromCSV(csv_path);
@@ -788,7 +788,7 @@ int main(int argc, char* argv[]) {
         cin.ignore();
 
         if (choice == 0) {
-            cout << "👋 Keluar dari sistem. Sampai jumpa!\n";
+            cout << "≡ƒæï Keluar dari sistem. Sampai jumpa!\n";
             break;
         }
         else if (choice == 1) {
@@ -799,7 +799,7 @@ int main(int argc, char* argv[]) {
             cout << "Module    : "; getline(cin, e.module);
             cout << "Message   : "; getline(cin, e.message);
             manager.insertLog(e);
-            cout << "✅ Log baru berhasil ditambahkan ke sistem.\n";
+            cout << "Γ£à Log baru berhasil ditambahkan ke sistem.\n";
         }
         else if (choice == 2) {
             string level;
@@ -808,7 +808,7 @@ int main(int argc, char* argv[]) {
             auto res = manager.searchByLevel(level);
             double ms = duration<double,milli>(high_resolution_clock::now()-t0).count();
             printResults(res);
-            cout << "⏱  Waktu Pencarian (Hash Table, O(1)): " << fixed << setprecision(4) << ms << " ms\n";
+            cout << "ΓÅ▒  Waktu Pencarian (Hash Table, O(1)): " << fixed << setprecision(4) << ms << " ms\n";
         }
         else if (choice == 3) {
             string mod;
@@ -817,7 +817,7 @@ int main(int argc, char* argv[]) {
             auto res = manager.searchByModule(mod);
             double ms = duration<double,milli>(high_resolution_clock::now()-t0).count();
             printResults(res);
-            cout << "⏱  Waktu Pencarian (Hash Table, O(1)): " << fixed << setprecision(4) << ms << " ms\n";
+            cout << "ΓÅ▒  Waktu Pencarian (Hash Table, O(1)): " << fixed << setprecision(4) << ms << " ms\n";
         }
         else if (choice == 4) {
             string t_start, t_end;
@@ -827,14 +827,14 @@ int main(int argc, char* argv[]) {
             auto res = manager.searchByTimeRange(t_start, t_end);
             double ms = duration<double,milli>(high_resolution_clock::now()-t0).count();
             printResults(res);
-            cout << "⏱  Waktu Pencarian (AVL Tree, O(log n + k)): " << fixed << setprecision(4) << ms << " ms\n";
+            cout << "ΓÅ▒  Waktu Pencarian (AVL Tree, O(log n + k)): " << fixed << setprecision(4) << ms << " ms\n";
         }
         else if (choice == 5) {
             auto t0 = high_resolution_clock::now();
             auto res = manager.getErrors();
             double ms = duration<double,milli>(high_resolution_clock::now()-t0).count();
             printResults(res);
-            cout << "⏱  Waktu Pencarian ERROR (Hash Table): " << fixed << setprecision(4) << ms << " ms\n";
+            cout << "ΓÅ▒  Waktu Pencarian ERROR (Hash Table): " << fixed << setprecision(4) << ms << " ms\n";
         }
         else if (choice == 6) {
             string cutoff;
@@ -842,7 +842,7 @@ int main(int argc, char* argv[]) {
             auto t0 = high_resolution_clock::now();
             manager.deleteBefore(cutoff);
             double ms = duration<double,milli>(high_resolution_clock::now()-t0).count();
-            cout << "⏱  Total Durasi Delete: " << fixed << setprecision(4) << ms << " ms\n";
+            cout << "ΓÅ▒  Total Durasi Delete: " << fixed << setprecision(4) << ms << " ms\n";
         }
         else if (choice == 7) {
             manager.printStatistics();
@@ -850,20 +850,20 @@ int main(int argc, char* argv[]) {
         else if (choice == 8) {
             // Ukuran benchmark: 1k, 5k, 10k, 25k, 50k, 100k
             vector<int> sizes = {1000, 5000, 10000, 25000, 50000, 100000};
-            cout << "\n⚙️ Benchmark sizes: 1k, 5k, 10k, 25k, 50k, 100k (5x repeat masing-masing)\n";
-            cout << "⏳ Proses ini membutuhkan beberapa menit untuk dataset besar...\n";
+            cout << "\nΓÜÖ∩╕Å Benchmark sizes: 1k, 5k, 10k, 25k, 50k, 100k (5x repeat masing-masing)\n";
+            cout << "ΓÅ│ Proses ini membutuhkan beberapa menit untuk dataset besar...\n";
             manager.runBenchmark(allLogs, sizes, 5);
         }
         else if (choice == 9) {
             auto res = manager.getLastBenchmark();
             if (res.empty()) {
-                cout << "⚠️ Silakan jalankan benchmark (Menu 8) terlebih dahulu!\n";
+                cout << "ΓÜá∩╕Å Silakan jalankan benchmark (Menu 8) terlebih dahulu!\n";
             } else {
                 exportBenchmarkToCSV("benchmark_results.csv", res);
             }
         }
         else {
-            cout << "⚠️ Opsi menu tidak tersedia.\n";
+            cout << "ΓÜá∩╕Å Opsi menu tidak tersedia.\n";
         }
     }
     return 0;

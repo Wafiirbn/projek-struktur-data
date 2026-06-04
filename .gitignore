@@ -5,15 +5,26 @@ visualnya/node_modules/
 # Vite cache
 visualnya/.vite/
 visualnya/dist/
+.vite/
 
-# C++ compiled binaries
-*.exe
+# C++ compiled binaries & objects
+*.o
 *.out
+*.exe
 a.out
+log_monitoring
 
 # OS files
 .DS_Store
 Thumbs.db
 
+# Python cache
+__pycache__/
+*.pyc
+
 # Editor
+.vscode/
 .vscode/settings.json
+
+# Build artifacts
+*.log
