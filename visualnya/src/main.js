@@ -167,9 +167,15 @@ fetch("/benchmark_results.csv")
     showError(`Gagal memuat data: ${err.message}. Pastikan file benchmark_results.csv ada di folder visualnya/.`);
   });
 
+// ── Helper: format N sebagai label ringkas (1000 → "1k", 100000 → "100k") ──
+function nLabel(n) {
+  if (n >= 1000) return (n / 1000) + 'k';
+  return String(n);
+}
+
 // ── Render Grouped Bar Chart ──
 function renderBar(opData, nList, op, yLabel, elemId) {
-  const xLabels = nList.map(n => n.toLocaleString('id-ID'));
+  const xLabels = nList.map(n => nLabel(n));
   const structures = DS_LIST.filter(ds => opData[ds]);
 
   const traces = structures.map(ds => {
@@ -211,7 +217,7 @@ function renderBar(opData, nList, op, yLabel, elemId) {
 
 // ── Render Memory Bar Chart (dari data CSV) ──
 function renderMemoryBar(memData, nList, elemId) {
-  const xLabels = nList.map(n => n.toLocaleString('id-ID'));
+  const xLabels = nList.map(n => nLabel(n));
   const structures = DS_LIST.filter(ds => memData[ds]);
 
   const traces = structures.map(ds => {
@@ -260,7 +266,7 @@ function renderMemoryEstimate(nList, elemId) {
   // HT: n * (sizeof(LogEntry) + 200) + buckets*64 = n * ~264 bytes
   const bytesPerNode = { LinkedList: 208, 'AVL Tree': 240, HashTable: 264 };
 
-  const xLabels = nList.map(n => n.toLocaleString('id-ID'));
+  const xLabels = nList.map(n => nLabel(n));
 
   const traces = DS_LIST.map(ds => {
     const bpn = bytesPerNode[ds] || 200;
