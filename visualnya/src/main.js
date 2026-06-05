@@ -354,12 +354,13 @@ function renderScalability(data, nList, elemId) {
 
   const layout = {
     ...baseLayout,
+    hovermode: 'closest',
     legend: {
       ...baseLayout.legend,
       y: -0.3,
       font: { size: 10 },
     },
-    margin: { ...baseLayout.margin, b: 120 },
+    margin: { ...baseLayout.margin, b: 120, t: 60 },
     xaxis: {
       ...baseLayout.xaxis,
       title: { text: 'Jumlah Data (N)', font: { size: 12 } },
