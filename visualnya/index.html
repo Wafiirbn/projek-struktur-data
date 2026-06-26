@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard Analisis Performa Struktur Data — Log Monitoring</title>
+  <title>Dashboard Analisis Performa Struktur Data - Log Monitoring</title>
   <meta name="description"
     content="Visualisasi perbandingan performa Linked List, AVL Tree, dan Hash Table pada sistem monitoring log aktivitas aplikasi." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -20,16 +20,16 @@
   <!-- HEADER HERO -->
   <header class="hero">
     <div class="hero-content">
-      <span class="badge">Topik 9 — Struktur Data</span>
+      <span class="badge">Topik 9 - Struktur Data</span>
       <h1>Analisis Performa Sistem Monitoring Log</h1>
       <p class="hero-subtitle">
         Perbandingan <strong>Linked List</strong>, <strong>AVL Tree</strong>, dan <strong>Hash Table</strong>
         dalam operasi insert, search, dan delete log aktivitas aplikasi.
       </p>
       <div class="hero-meta">
-        <span class="meta-chip">📊 Dataset: 100.000 Log Entries</span>
-        <span class="meta-chip">🔁 5× Repeat Measurement</span>
-        <span class="meta-chip">🌐 C++14 · Plotly.js</span>
+        <span class="meta-chip">Dataset: 100.000 Log Entries</span>
+        <span class="meta-chip">5x Repeat Measurement</span>
+        <span class="meta-chip">C++14 · Plotly.js</span>
       </div>
     </div>
   </header>
@@ -149,8 +149,8 @@
       <!-- INSERT -->
       <article class="chart-card" id="card-insert">
         <div class="chart-header">
-          <h3 class="chart-title">⚡ Operasi INSERT</h3>
-          <p class="chart-desc">Waktu rata-rata memasukkan entri log baru ke masing-masing struktur data (5× repeat).
+          <h3 class="chart-title">Operasi INSERT</h3>
+          <p class="chart-desc">Waktu rata-rata memasukkan entri log baru ke masing-masing struktur data (5x repeat).
           </p>
         </div>
         <div id="grafik_insert" class="chart-container"></div>
@@ -159,8 +159,8 @@
       <!-- EXACT SEARCH -->
       <article class="chart-card" id="card-search">
         <div class="chart-header">
-          <h3 class="chart-title">🔍 Operasi EXACT SEARCH (by Level/Key)</h3>
-          <p class="chart-desc">Waktu pencarian log berdasarkan level (INFO/WARNING/ERROR/DEBUG/CRITICAL) — exact match.
+          <h3 class="chart-title">Operasi EXACT SEARCH (by Level/Key)</h3>
+          <p class="chart-desc">Waktu pencarian log berdasarkan level (INFO/WARNING/ERROR/DEBUG/CRITICAL) - exact match.
           </p>
         </div>
         <div id="grafik_search" class="chart-container"></div>
@@ -169,7 +169,7 @@
       <!-- RANGE SEARCH -->
       <article class="chart-card" id="card-range">
         <div class="chart-header">
-          <h3 class="chart-title">📅 Operasi RANGE SEARCH (by Waktu)</h3>
+          <h3 class="chart-title">Operasi RANGE SEARCH (by Waktu)</h3>
           <p class="chart-desc">Waktu pencarian log dalam rentang waktu tertentu (window 7 hari).</p>
         </div>
         <div id="grafik_range" class="chart-container"></div>
@@ -178,8 +178,8 @@
       <!-- DELETE -->
       <article class="chart-card" id="card-delete">
         <div class="chart-header">
-          <h3 class="chart-title">🗑️ Operasi DELETE (log lama)</h3>
-          <p class="chart-desc">Waktu menghapus log yang lebih lama dari timestamp cutoff (±50% data dihapus).</p>
+          <h3 class="chart-title">Operasi DELETE (log lama)</h3>
+          <p class="chart-desc">Waktu menghapus log yang lebih lama dari timestamp cutoff (+-50% data dihapus).</p>
         </div>
         <div id="grafik_delete" class="chart-container"></div>
       </article>
@@ -187,7 +187,7 @@
       <!-- MEMORY -->
       <article class="chart-card" id="card-memory">
         <div class="chart-header">
-          <h3 class="chart-title">💾 Penggunaan Memori (Estimasi)</h3>
+          <h3 class="chart-title">Penggunaan Memori (Estimasi)</h3>
           <p class="chart-desc">Estimasi total memori yang digunakan setelah insert n entri (dalam Kilobytes).</p>
         </div>
         <div id="grafik_memory" class="chart-container"></div>
@@ -196,8 +196,8 @@
       <!-- SKALABILITAS -->
       <article class="chart-card wide" id="card-scalability">
         <div class="chart-header">
-          <h3 class="chart-title">📈 Kurva Skalabilitas Semua Operasi</h3>
-          <p class="chart-desc">Pertumbuhan waktu eksekusi terhadap peningkatan volume data — menunjukkan dampak
+          <h3 class="chart-title">Kurva Skalabilitas Semua Operasi</h3>
+          <p class="chart-desc">Pertumbuhan waktu eksekusi terhadap peningkatan volume data - menunjukkan dampak
             pertumbuhan log terhadap performa.</p>
         </div>
         <div id="grafik_semua_operasi" class="chart-container chart-tall"></div>
@@ -245,9 +245,8 @@
   </section>
 
   <footer class="site-footer">
-    <p>Topik 9 — Sistem Monitoring & Log Aktivitas Aplikasi · Analisis Struktur Data</p>
-    <p style="font-size:0.8rem; opacity:0.6; margin-top:4px;">Linked List · AVL Tree · Hash Table · Dataset 100k · 5×
-      Repeat</p>
+    <p>Topik 9 - Sistem Monitoring &amp; Log Aktivitas Aplikasi · Analisis Struktur Data</p>
+    <p style="font-size:0.8rem; opacity:0.6; margin-top:4px;">Linked List · AVL Tree · Hash Table · Dataset 100k · 5x Repeat</p>
   </footer>
 
   <script type="module" src="/src/main.js"></script>

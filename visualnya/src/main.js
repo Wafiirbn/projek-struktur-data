@@ -1,7 +1,7 @@
 import Plotly from "plotly.js-dist-min";
 import Papa from "papaparse";
 
-// ── Warna & Label per Struktur Data ──
+// -- Warna & Label per Struktur Data --
 const colors = {
   LinkedList: '#2563eb',   // Blue
   'AVL Tree': '#d97706',   // Amber
@@ -16,30 +16,30 @@ const dsLabels = {
 
 const bigOLabels = {
   INSERT: {
-    LinkedList: 'Linked List — O(1)',
-    'AVL Tree': 'AVL Tree — O(log n)',
-    HashTable:  'Hash Table — O(1) avg',
+    LinkedList: 'Linked List - O(1)',
+    'AVL Tree': 'AVL Tree - O(log n)',
+    HashTable:  'Hash Table - O(1) avg',
   },
   SEARCH: {
-    LinkedList: 'Linked List — O(n)',
-    'AVL Tree': 'AVL Tree — O(n)',
-    HashTable:  'Hash Table — O(1) avg',
+    LinkedList: 'Linked List - O(n)',
+    'AVL Tree': 'AVL Tree - O(n)',
+    HashTable:  'Hash Table - O(1) avg',
   },
   RANGE: {
-    LinkedList: 'Linked List — O(n)',
-    'AVL Tree': 'AVL Tree — O(log n + k)',
-    HashTable:  'Hash Table — O(n)',
+    LinkedList: 'Linked List - O(n)',
+    'AVL Tree': 'AVL Tree - O(log n + k)',
+    HashTable:  'Hash Table - O(n)',
   },
   DELETE: {
-    LinkedList: 'Linked List — O(n)',
-    'AVL Tree': 'AVL Tree — O(n log n)',
-    HashTable:  'Hash Table — O(n)',
+    LinkedList: 'Linked List - O(n)',
+    'AVL Tree': 'AVL Tree - O(n log n)',
+    HashTable:  'Hash Table - O(n)',
   },
 };
 
 const DS_LIST = ['LinkedList', 'AVL Tree', 'HashTable'];
 
-// ── Config Plotly ──
+// -- Config Plotly --
 const plotConfig = {
   responsive: true,
   displayModeBar: true,
@@ -83,7 +83,7 @@ const baseLayout = {
   },
 };
 
-// ── Fetch & Parse CSV ──
+// -- Fetch & Parse CSV --
 fetch("/benchmark_results.csv")
   .then(r => {
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
@@ -167,13 +167,13 @@ fetch("/benchmark_results.csv")
     showError(`Gagal memuat data: ${err.message}. Pastikan file benchmark_results.csv ada di folder visualnya/.`);
   });
 
-// ── Helper: format N sebagai label ringkas (1000 → "1k", 100000 → "100k") ──
+// -- Helper: format N sebagai label ringkas (1000 -> "1k", 100000 -> "100k") --
 function nLabel(n) {
   if (n >= 1000) return (n / 1000) + 'k';
   return String(n);
 }
 
-// ── Render Grouped Bar Chart ──
+// -- Render Grouped Bar Chart --
 function renderBar(opData, nList, op, yLabel, elemId) {
   const xLabels = nList.map(n => nLabel(n));
   const structures = DS_LIST.filter(ds => opData[ds]);
@@ -215,7 +215,7 @@ function renderBar(opData, nList, op, yLabel, elemId) {
   Plotly.newPlot(elemId, traces, layout, plotConfig);
 }
 
-// ── Render Memory Bar Chart (dari data CSV) ──
+// -- Render Memory Bar Chart (dari data CSV) --
 function renderMemoryBar(memData, nList, elemId) {
   const xLabels = nList.map(n => nLabel(n));
   const structures = DS_LIST.filter(ds => memData[ds]);
@@ -258,11 +258,11 @@ function renderMemoryBar(memData, nList, elemId) {
   Plotly.newPlot(elemId, traces, layout, plotConfig);
 }
 
-// ── Render Memory Estimasi (jika tidak ada kolom memori di CSV) ──
+// -- Render Memory Estimasi (jika tidak ada kolom memori di CSV) --
 function renderMemoryEstimate(nList, elemId) {
   // Rumus estimasi bytes per struktur:
   // LL: n * (sizeof(LLNode) + 200) = n * ~208 bytes
-  // AVL: n * (sizeof(AVLNode) + 200) = n * ~240 bytes  
+  // AVL: n * (sizeof(AVLNode) + 200) = n * ~240 bytes
   // HT: n * (sizeof(LogEntry) + 200) + buckets*64 = n * ~264 bytes
   const bytesPerNode = { LinkedList: 208, 'AVL Tree': 240, HashTable: 264 };
 
@@ -310,7 +310,7 @@ function renderMemoryEstimate(nList, elemId) {
   Plotly.newPlot(elemId, traces, layout, plotConfig);
 }
 
-// ── Render Line Chart Skalabilitas ──
+// -- Render Line Chart Skalabilitas --
 function renderScalability(data, nList, elemId) {
   const ops = [
     { key: 'INSERT', label: 'Insert', dash: 'solid' },
@@ -336,7 +336,7 @@ function renderScalability(data, nList, elemId) {
       traces.push({
         x: points.map(pt => pt.n),
         y: points.map(pt => pt.v),
-        name: `${op.label} · ${dsLabels[ds] || ds}`,
+        name: `${op.label} - ${dsLabels[ds] || ds}`,
         legendgroup: ds,
         type: 'scatter',
         mode: 'lines+markers',
@@ -374,7 +374,7 @@ function renderScalability(data, nList, elemId) {
   Plotly.newPlot(elemId, traces, layout, plotConfig);
 }
 
-// ── Error Display ──
+// -- Error Display --
 function showError(msg) {
   const ids = ['grafik_insert','grafik_search','grafik_range','grafik_delete','grafik_memory','grafik_semua_operasi'];
   ids.forEach(id => {
@@ -382,7 +382,7 @@ function showError(msg) {
     if (el) {
       el.innerHTML = `
         <div style="display:flex;align-items:center;justify-content:center;height:300px;flex-direction:column;gap:12px;color:#dc2626;">
-          <div style="font-size:2rem;">⚠️</div>
+          <div style="font-size:1.5rem;">[!]</div>
           <div style="font-size:0.9rem;text-align:center;max-width:400px;line-height:1.6;">${msg}</div>
         </div>`;
     }

@@ -9,14 +9,14 @@
 
 using namespace std::chrono;
 
-// ═══════════════════════════════════════════════════════════════
+// ===============================================================
 //  CSV LOADER IMPLEMENTATION
-// ═══════════════════════════════════════════════════════════════
+// ===============================================================
 std::vector<LogEntry> loadCSV(const std::string& path, int limit) {
     std::vector<LogEntry> logs;
     std::ifstream f(path);
     if (!f.is_open()) {
-        std::cerr << "❌ Gagal membuka file atau file belum ada: " << path << "\n";
+        std::cerr << "[ERROR] Gagal membuka file atau file belum ada: " << path << "\n";
         return logs;
     }
     std::string line;
@@ -41,9 +41,9 @@ std::vector<LogEntry> loadCSV(const std::string& path, int limit) {
     return logs;
 }
 
-// ═══════════════════════════════════════════════════════════════
+// ===============================================================
 //  BENCHMARK HELPER FUNCTIONS
-// ═══════════════════════════════════════════════════════════════
+// ===============================================================
 template<typename Func>
 static double measureMsAvg(Func&& f, int repeat = 5) {
     double total_ms = 0;
@@ -81,17 +81,17 @@ static void printBenchmarkTable(const std::vector<BenchmarkResult>& results) {
     std::cout << std::string(105, '=') << "\n";
 }
 
-// ═══════════════════════════════════════════════════════════════
+// ===============================================================
 //  LOG MANAGER IMPLEMENTATION
-// ═══════════════════════════════════════════════════════════════
+// ===============================================================
 LogManager::LogManager() : ht_level("level"), ht_module("module"), total(0) {}
 
 void LogManager::loadFromCSV(const std::string& path, int limit) {
     auto logs = loadCSV(path, limit);
     if (logs.empty()) return;
-    std::cout << "📂 Memuat " << logs.size() << " entri log ke sistem...\n";
+    std::cout << "[LOAD] Memuat " << logs.size() << " entri log ke sistem...\n";
     for (auto& e : logs) insertLog(e);
-    std::cout << "✅ Berhasil sinkronisasi: " << total << " log\n";
+    std::cout << "[OK] Berhasil sinkronisasi: " << total << " log\n";
 }
 
 void LogManager::insertLog(const LogEntry& e) {
@@ -124,14 +124,14 @@ void LogManager::deleteBefore(const std::string& cutoff) {
     ht_level.deleteBefore(cutoff);
     ht_module.deleteBefore(cutoff);
     total -= deleted;
-    std::cout << "🗑️ Berhasil menghapus: " << deleted << " log lawas (sebelum " << cutoff << ")\n";
+    std::cout << "[DELETE] Berhasil menghapus: " << deleted << " log lawas (sebelum " << cutoff << ")\n";
 }
 
 void LogManager::printStatistics() {
     auto stats = ht_level.statistics();
-    std::cout << "\n📊 STATISTIK STRUKTUR DATA (HASH TABLE MAP)\n" << std::string(45, '-') << "\n";
-    for (auto& [lvl, cnt] : stats) {
-        std::cout << "  " << std::setw(12) << std::left << lvl << ": " << cnt << " log\n";
+    std::cout << "\n[STATS] STATISTIK STRUKTUR DATA (HASH TABLE MAP)\n" << std::string(45, '-') << "\n";
+    for (auto& p : stats) {
+        std::cout << "  " << std::setw(12) << std::left << p.first << ": " << p.second << " log\n";
     }
     std::cout << "  " << std::setw(12) << std::left << "TOTAL DATA" << ": " << total << " log\n";
 }
@@ -146,7 +146,7 @@ std::vector<BenchmarkResult> LogManager::getLastBenchmark() {
 
 void LogManager::runBenchmark(const std::vector<LogEntry>& allLogs, const std::vector<int>& sizes, int repeat) {
     if (allLogs.empty()) {
-        std::cout << "⚠️ Tidak ada data untuk melakukan pengujian benchmark.\n";
+        std::cout << "[WARNING] Tidak ada data untuk melakukan pengujian benchmark.\n";
         return;
     }
     std::cout << "\n" << std::string(75, '=') << "\n";
@@ -158,7 +158,7 @@ void LogManager::runBenchmark(const std::vector<LogEntry>& allLogs, const std::v
 
     for (int n : sizes) {
         if (n > (int)allLogs.size()) {
-            std::cout << "⚠️ Lewati n=" << n << " (data tidak cukup, hanya " << allLogs.size() << " entri)\n";
+            std::cout << "[SKIP] Lewati n=" << n << " (data tidak cukup, hanya " << allLogs.size() << " entri)\n";
             continue;
         }
         std::vector<LogEntry> sample(allLogs.begin(), allLogs.begin() + n);
@@ -180,7 +180,7 @@ void LogManager::runBenchmark(const std::vector<LogEntry>& allLogs, const std::v
         std::strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", tminfo);
         std::string t_end = std::string(buf);
 
-        std::cout << "\n▶ n = " << n << " entri (repeat=" << repeat << "x)...\n";
+        std::cout << "\n>> n = " << n << " entri (repeat=" << repeat << "x)...\n";
 
         // ── Skenario 1: Linked List ──
         {
@@ -203,7 +203,7 @@ void LogManager::runBenchmark(const std::vector<LogEntry>& allLogs, const std::v
             
             double mem_kb = ll_mem.estimateMemoryBytes() / 1024.0;
             last_benchmark_results.push_back({"LinkedList", n, t_ins, t_ex, t_rng, t_del, mem_kb});
-            std::cout << "  ✓ LinkedList: ins=" << std::fixed << std::setprecision(3) << t_ins
+            std::cout << "  [+] LinkedList: ins=" << std::fixed << std::setprecision(3) << t_ins
                       << "ms, search=" << t_ex << "ms, range=" << t_rng
                       << "ms, del=" << t_del << "ms, mem=" << std::setprecision(1) << mem_kb << " KB\n";
         }
@@ -229,7 +229,7 @@ void LogManager::runBenchmark(const std::vector<LogEntry>& allLogs, const std::v
             
             double mem_kb = avl_mem.estimateMemoryBytes() / 1024.0;
             last_benchmark_results.push_back({"AVL Tree", n, t_ins, t_ex, t_rng, t_del, mem_kb});
-            std::cout << "  ✓ AVL Tree:   ins=" << std::fixed << std::setprecision(3) << t_ins
+            std::cout << "  [+] AVL Tree:   ins=" << std::fixed << std::setprecision(3) << t_ins
                       << "ms, search=" << t_ex << "ms, range=" << t_rng
                       << "ms, del=" << t_del << "ms, mem=" << std::setprecision(1) << mem_kb << " KB\n";
         }
@@ -255,7 +255,7 @@ void LogManager::runBenchmark(const std::vector<LogEntry>& allLogs, const std::v
             
             double mem_kb = ht_mem.estimateMemoryBytes() / 1024.0;
             last_benchmark_results.push_back({"HashTable", n, t_ins, t_ex, t_rng, t_del, mem_kb});
-            std::cout << "  ✓ HashTable:  ins=" << std::fixed << std::setprecision(3) << t_ins
+            std::cout << "  [+] HashTable:  ins=" << std::fixed << std::setprecision(3) << t_ins
                       << "ms, search=" << t_ex << "ms, range=" << t_rng
                       << "ms, del=" << t_del << "ms, mem=" << std::setprecision(1) << mem_kb << " KB\n";
         }

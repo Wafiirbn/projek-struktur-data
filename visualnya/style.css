@@ -1,17 +1,17 @@
 /* ============================================================
-   SISTEM MONITORING — Dashboard Visualisasi
-   Light Mode Professional — Screenshot-Ready for Laporan
+   SISTEM MONITORING - Dashboard Visualisasi
+   Light Mode Professional - Screenshot-Ready for Laporan
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
-/* ── RESET & BASE ── */
+/* -- RESET & BASE -- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --col-ll:     #2563eb;   /* Blue — Linked List */
-  --col-avl:    #d97706;   /* Amber — AVL Tree */
-  --col-ht:     #059669;   /* Emerald — Hash Table */
+  --col-ll:     #2563eb;   /* Blue - Linked List */
+  --col-avl:    #d97706;   /* Amber - AVL Tree */
+  --col-ht:     #059669;   /* Emerald - Hash Table */
   --bg:         #f8fafc;
   --surface:    #ffffff;
   --border:     #e2e8f0;
@@ -34,7 +34,7 @@ body {
   font-size: 15px;
 }
 
-/* ── HERO ── */
+/* -- HERO -- */
 .hero {
   background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
   color: #fff;
@@ -106,14 +106,14 @@ body {
   backdrop-filter: blur(4px);
 }
 
-/* ── CONTAINER ── */
+/* -- CONTAINER -- */
 .container {
   max-width: 1300px;
   margin: 0 auto;
   padding: 0 24px;
 }
 
-/* ── SECTION TITLE ── */
+/* -- SECTION TITLE -- */
 .section-title {
   font-size: 1.4rem;
   font-weight: 700;
@@ -123,7 +123,7 @@ body {
   border-bottom: 2px solid var(--border);
 }
 
-/* ── COMPLEXITY TABLE SECTION ── */
+/* -- COMPLEXITY TABLE SECTION -- */
 .complexity-section { }
 
 .complexity-grid {
@@ -176,7 +176,7 @@ body {
 .big-o-table td.bad  { color: #dc2626; font-weight: 600; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
 .big-o-table tr:last-child td { border-bottom: none; }
 
-/* ── CHARTS GRID ── */
+/* -- CHARTS GRID -- */
 .charts-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -229,7 +229,7 @@ body {
   line-height: 1.6;
 }
 
-/* ── LOADING STATE ── */
+/* -- LOADING STATE -- */
 .chart-loading {
   display: flex;
   align-items: center;
@@ -240,7 +240,7 @@ body {
   gap: 10px;
 }
 
-/* ── RECOMMENDATION ── */
+/* -- RECOMMENDATION -- */
 .recommendation { padding-bottom: 20px; }
 
 .rec-grid {
@@ -297,7 +297,7 @@ body {
 
 .rec-card p { font-size: 0.87rem; color: var(--text-2); line-height: 1.6; }
 
-/* ── FOOTER ── */
+/* -- FOOTER -- */
 .site-footer {
   background: #0f172a;
   color: #94a3b8;
@@ -307,7 +307,7 @@ body {
   font-size: 0.88rem;
 }
 
-/* ── RESPONSIVE ── */
+/* -- RESPONSIVE -- */
 @media (max-width: 900px) {
   .charts-grid { grid-template-columns: 1fr; }
   .chart-card.wide { grid-column: 1; }

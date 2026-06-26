@@ -26,8 +26,8 @@ std::vector<LogEntry> LogHashTable::searchByTimeRange(const std::string& t_start
     tmp.timestamp = t_end;
     long long te = tmp.toEpoch();
     std::vector<LogEntry> res;
-    for (auto& [key, chain] : buckets) {
-        for (auto& e : chain) {
+    for (auto& p : buckets) {
+        for (auto& e : p.second) {
             long long t = e.toEpoch();
             if (t >= ts && t <= te) {
                 res.push_back(e);
@@ -42,7 +42,8 @@ int LogHashTable::deleteBefore(const std::string& cutoff) {
     tmp.timestamp = cutoff;
     long long cut = tmp.toEpoch();
     int deleted = 0;
-    for (auto& [key, chain] : buckets) {
+    for (auto& p : buckets) {
+        auto& chain = p.second;
         int before = chain.size();
         chain.erase(std::remove_if(chain.begin(), chain.end(),
             [&](const LogEntry& e){ return e.toEpoch() < cut; }),
@@ -55,8 +56,8 @@ int LogHashTable::deleteBefore(const std::string& cutoff) {
 
 std::unordered_map<std::string, int> LogHashTable::statistics() const {
     std::unordered_map<std::string, int> stats;
-    for (auto& [key, chain] : buckets) {
-        stats[key] = (int)chain.size();
+    for (auto& p : buckets) {
+        stats[p.first] = (int)p.second.size();
     }
     return stats;
 }
